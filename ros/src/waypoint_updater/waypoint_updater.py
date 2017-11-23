@@ -47,25 +47,31 @@ class WaypointUpdater(object):
 
         #Publish final way points
         self.final_waypoints_pub = rospy.Publisher('/final_waypoints', Lane, queue_size=1)
-        self.final_waypoints_pub.publish(msg)
+
 
         # TODO: Add other member variables you need below
-        
+        #pose_cb
+        self.pose = None
 
-
-
+        #waypoints_cb
+        self.laneMsg = False
+        self.base_waypoints = None
+        self.num_waypoints = 0
 
         rospy.spin()
+
+    def publish(self):
+        self.final_waypoints_pub.publish(waypoints_project)
 
     def pose_cb(self, msg):
         #message details
         #geometry_msgs/PoseStamped pose
         #geometry_msgs/TwistStamped twist
         self.pose = msg.pose
+        rospy.loginfo("Car position is updated to %s".format(self.pose))
 
 
     def waypoints_cb(self, waypoints):
-
         #waypoints - lane message
         #Header header
         #Waypoint[] waypoints

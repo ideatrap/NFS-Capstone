@@ -42,7 +42,7 @@ class WaypointUpdater(object):
         rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
 
         #Debug subscribe to system's simulated traffic light info
-        #rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_sim_cb)
+        rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_sim_cb)
         rospy.Subscriber('/obstacle_waypoint', Int32, self.obstacle_cb)
 
 
@@ -68,7 +68,7 @@ class WaypointUpdater(object):
 
     def publish(self):
         self.next_waypoint_index = self.find_next_waypoint()
-        rospy.logwarn("Next waypoints is {}".format(self.next_waypoint_index))
+
         #self.final_waypoints_pub.publish(waypoints_project)
         pass
 

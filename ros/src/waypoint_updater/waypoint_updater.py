@@ -56,6 +56,7 @@ class WaypointUpdater(object):
         self.pose = None
 
         #waypoints_cb
+        self.header = None
         self.laneMsg = False
         self.base_waypoints = None
         self.num_waypoints = 0
@@ -93,7 +94,7 @@ class WaypointUpdater(object):
             self.header = waypoints.header
             self.base_waypoints = waypoints.waypoints
             self.num_waypoints = len(self.base_waypoints)
-            rospy.logwarn("Way points header is {}".format(self.hearder))
+            rospy.logwarn("Way points header is {}".format(self.header))
             rospy.logwarn("Way points base waypoints is {}".format(self.base_waypoints))
             self.laneMsg = True
 

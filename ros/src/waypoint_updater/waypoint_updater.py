@@ -42,7 +42,7 @@ class WaypointUpdater(object):
         rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
 
         #Debug subscribe to system's simulated traffic light info
-        rospy.Subscriber('/vehicle/traffic_lights', Int32, self.traffic_sim_cb)
+        rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_sim_cb)
         rospy.Subscriber('/obstacle_waypoint', Int32, self.obstacle_cb)
 
 

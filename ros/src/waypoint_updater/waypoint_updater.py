@@ -38,11 +38,11 @@ class WaypointUpdater(object):
         #rospy.Subscriber('/current_velocity', TwistStamped, self.twist_cb, queue_size=1);
 
         #subscribe to the message from traffic light detection
-        rospy.subscriber('/traffic_waypoint', Int32, self.traffic_cb)
+        rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
 
         #Debug subscribe to system's simulated traffic light info
-        rospy.subscriber('/vehicle/traffic_lights', Int32, self.traffic_sim_cb)
-        rospy.subscriber('/obstacle_waypoint', Int32, self.obstacle_cb)
+        rospy.Subscriber('/vehicle/traffic_lights', Int32, self.traffic_sim_cb)
+        rospy.Subscriber('/obstacle_waypoint', Int32, self.obstacle_cb)
 
 
         #Publish final way points
@@ -97,7 +97,7 @@ class WaypointUpdater(object):
         pass
 
 
-    
+
     def get_waypoint_velocity(self, waypoint):
         return waypoint.twist.twist.linear.x
 

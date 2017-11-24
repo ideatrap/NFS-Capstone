@@ -65,7 +65,8 @@ class WaypointUpdater(object):
             rate.sleep()
 
     def publish(self):
-        self.final_waypoints_pub.publish(waypoints_project)
+        #self.final_waypoints_pub.publish(waypoints_project)
+        pass
 
     def pose_cb(self, msg):
         #message details

@@ -124,9 +124,11 @@ class WaypointUpdater(object):
         return dist
 
     def traffic_sim_cb(self, msg):
-        tl_sim = msg.data
-        if tl_sim >= 0:
-            rospy.logwarn("simulator traffic light:", tl_sim)
+        tl_header= msg.header
+        tl_lights = msg.lights
+        rospy.logwarn("simulator traffic light: {}\n".format(tl_header))
+        rospy.logwarn("simulator traffic lights: {}\n\n".format(tl_lights))
+
 
 
 if __name__ == '__main__':

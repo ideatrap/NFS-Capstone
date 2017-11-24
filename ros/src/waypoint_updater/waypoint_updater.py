@@ -42,7 +42,7 @@ class WaypointUpdater(object):
         rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
 
         #Debug subscribe to system's simulated traffic light info
-        rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_sim_cb)
+        #rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_sim_cb)
         rospy.Subscriber('/obstacle_waypoint', Int32, self.obstacle_cb)
 
 
@@ -73,7 +73,7 @@ class WaypointUpdater(object):
         #geometry_msgs/PoseStamped pose
         #geometry_msgs/TwistStamped twist
         self.pose = msg.pose
-        rospy.loginfo("Car position is updated to %s".format(self.pose))
+        #rospy.logwarn("Car position is updated to %s".format(self.pose))
 
 
     def waypoints_cb(self, waypoints):
@@ -85,6 +85,8 @@ class WaypointUpdater(object):
             self.header = waypoints.header
             self.base_waypoints = waypoints.waypoints
             self.num_waypoints = len(self.base_waypoints)
+            rospy.logwarn("Total waypoints is {}".format(self.num_waypoints))
+            #rospy.logwarn("Total waypoints is {}".format(self.num_waypoints))
             self.laneMsg = True
 
     def traffic_cb(self, msg):

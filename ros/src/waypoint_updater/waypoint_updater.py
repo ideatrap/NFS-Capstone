@@ -93,7 +93,8 @@ class WaypointUpdater(object):
             self.header = waypoints.header
             self.base_waypoints = waypoints.waypoints
             self.num_waypoints = len(self.base_waypoints)
-
+            rospy.logwarn("Way points header is {}".format(self.hearder))
+            rospy.logwarn("Way points base waypoints is {}".format(self.base_waypoints))
             self.laneMsg = True
 
     def traffic_cb(self, msg):

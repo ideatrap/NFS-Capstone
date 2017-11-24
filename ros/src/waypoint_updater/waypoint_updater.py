@@ -59,14 +59,21 @@ class WaypointUpdater(object):
         self.base_waypoints = None
         self.num_waypoints = 0
 
+        self.next_waypoint_index = -1
+
         rate = rospy.Rate(30)
         while not rospy.is_shutdown():
             self.publish()
             rate.sleep()
 
     def publish(self):
+        self.next_waypoint_index = self.find_next_waypoint()
+        rospy.logwarn("Next waypoints is {}".format(self.next_waypoint_index))
         #self.final_waypoints_pub.publish(waypoints_project)
         pass
+
+    def find_next_waypoint(self):
+        return 3
 
     def pose_cb(self, msg):
         #message details
@@ -85,8 +92,7 @@ class WaypointUpdater(object):
             self.header = waypoints.header
             self.base_waypoints = waypoints.waypoints
             self.num_waypoints = len(self.base_waypoints)
-            rospy.logwarn("Total waypoints is {}".format(self.num_waypoints))
-            #rospy.logwarn("Total waypoints is {}".format(self.num_waypoints))
+
             self.laneMsg = True
 
     def traffic_cb(self, msg):

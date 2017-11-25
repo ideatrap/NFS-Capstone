@@ -90,7 +90,6 @@ class WaypointUpdater(object):
 
         #find the way point ahead
         min_dist = 9999999
-        min_wp_found = False
         wp_ahead_index = -1
 
         if self.next_waypoint_index == -1: #first to identify the way point position
@@ -102,7 +101,11 @@ class WaypointUpdater(object):
                 if dist < min_dist:
                     wp_ahead_index = i
                     min_dist = dist
-        rospy.logwarn("Closest way point: {}".format(wp_ahead_index))
+                    rospy.logwarn("going through index: {}\n".format(wp_ahead_index))
+                    rospy.logwarn("distance: {}\n".format(min_dist))
+
+        self.next_waypoint_index = wp_ahead_index
+        #rospy.logwarn("Closest way point: {}".format(wp_ahead_index))
 
 
 

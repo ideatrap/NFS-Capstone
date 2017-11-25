@@ -105,7 +105,6 @@ class WaypointUpdater(object):
                 wp_ahead_index = i
                 min_dist = dist
                 rospy.logwarn("going through index: {}\n".format(wp_ahead_index))
-                rospy.logwarn("distance: {}\n".format(min_dist))
 
         self.next_waypoint_index = wp_ahead_index
         #rospy.logwarn("Closest way point: {}".format(wp_ahead_index))

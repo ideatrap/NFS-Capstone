@@ -24,12 +24,17 @@ as well as to verify your TL classifier.
 TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
-LOOKAHEAD_WPS = 100 # Number of waypoints to look ahead of the car
+LOOKAHEAD_WPS = 120 # Number of waypoints to look ahead of the car
 
 
 class WaypointUpdater(object):
     def __init__(self):
         rospy.init_node('waypoint_updater')
+
+        max_velocity = rospy.get_param('/waypoint_loader/velocity')
+        rospy.logwarn("Max velocity: {}".format(max_velocity))
+        #self.max_velocity = max_velocity_kmph * KMPH2MPS
+        #rospy.logwarn("Max velocity: {0:.2f} km/h".format(max_velocity_kmph))
 
         #subscribe to car's current position
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb, queue_size = 1)
@@ -86,10 +91,12 @@ class WaypointUpdater(object):
         point_ahead = None
 
         for i, waypoint in enumerate (self.base_waypoints):
-            #all the way points ahead
-            wp_x = waypoint.pose.position.x
-            wp_y = waypoint.pose.position.y
-            rospy.logwarn("waypoint x: {}\n\n".format(wp_x))
+            #all way points
+            wp_x = waypoint.pose.pose.position.x
+            wp_y = waypoint.pose.pose.position.y
+
+            #calculate the distance
+            #dist = self.distance()
 
 
 
@@ -156,8 +163,7 @@ class WaypointUpdater(object):
     def traffic_sim_cb(self, msg):
         tl_header= msg.header
         tl_lights = msg.lights
-        #rospy.logwarn("simulator traffic light: {}\n".format(tl_header))
-        #rospy.logwarn("simulator traffic lights: {}\n\n".format(tl_lights))
+        rospy.logwarn("simulator traffic lights: \n{}\n\n".format(tl_lights))
 
 
 

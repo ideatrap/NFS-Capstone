@@ -78,8 +78,8 @@ class WaypointUpdater(object):
         if self.base_waypoints is None or self.pose is None:
             return
         #if there is valid way points
-        pos_x = self.current_pose.position.x
-        pos_y = self.current_pose.position.y
+        pos_x = self.pose.position.x
+        pos_y = self.pose.position.y
         rospy.logwarn("Finding closest waypoint to car at position {}, {}".format(pos_x, pos_6y))
 
 

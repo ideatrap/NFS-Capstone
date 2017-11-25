@@ -75,17 +75,38 @@ class WaypointUpdater(object):
         pass
 
     def find_next_waypoint(self):
-        return 3
+        if self.waypoints is None or self.current_pose is None:
+            return
+        #if there is valid way points
+        pos_x = self.current_pose.position.x
+        pos_y = self.current_pose.position.y
+        rospy.logwarn("Finding closest waypoint to car at position %f, %f", carx, cary)
+
+
 
     def pose_cb(self, msg):
         #message details
         #geometry_msgs/PoseStamped pose
         #geometry_msgs/TwistStamped twist
+        #read in car's current position
+        '''
+        Sample message:
+            position:
+                x: 1505.229
+                y: 1177.846
+                z: 0.03191106
+            orientation:
+                x: 0.0
+                y: 0.0
+                z: 0.00070633687121
+                w: 0.999999750544
+        '''
         self.pose = msg.pose
-        rospy.logwarn("Car position is updated to {}".format(self.pose))
+        #rospy.logwarn("Car position is updated to {}".format(self.pose))
 
 
     def waypoints_cb(self, waypoints):
+        #Read in all way points on the track
         #waypoints - lane message
         #Header header
         #Waypoint[] waypoints
@@ -94,7 +115,7 @@ class WaypointUpdater(object):
             self.header = waypoints.header
             self.base_waypoints = waypoints.waypoints
             self.num_waypoints = len(self.base_waypoints)
-            self.laneMsg = True # get all way points on the track
+            self.laneMsg = True
 
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement

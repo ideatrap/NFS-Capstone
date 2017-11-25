@@ -75,20 +75,20 @@ class WaypointUpdater(object):
         pass
 
     def find_next_waypoint(self):
-        if self.waypoints is None or self.current_pose is None:
+        if self.base_waypoints is None or self.pose is None:
             return
         #if there is valid way points
         pos_x = self.current_pose.position.x
         pos_y = self.current_pose.position.y
-        rospy.logwarn("Finding closest waypoint to car at position %f, %f", carx, cary)
+        rospy.logwarn("Finding closest waypoint to car at position {}, {}".format(pos_x, pos_6y))
 
 
 
     def pose_cb(self, msg):
+        #read in car's current position
         #message details
         #geometry_msgs/PoseStamped pose
         #geometry_msgs/TwistStamped twist
-        #read in car's current position
         '''
         Sample message:
             position:

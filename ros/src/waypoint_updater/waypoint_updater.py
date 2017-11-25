@@ -87,8 +87,8 @@ class WaypointUpdater(object):
 
         for i, waypoint in enumerate (self.base_waypoints):
             #all the way points ahead
-            wp_x = self.base_waypoints.pose.pose.position.x
-            wp_y = self.base_waypoints.pose.pose.position.y
+            wp_x = waypoint.pose.position.x
+            wp_y = waypoint.pose.position.y
             rospy.logwarn("waypoint x: {}\n\n".format(wp_x))
 
 

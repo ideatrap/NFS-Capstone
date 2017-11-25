@@ -82,7 +82,7 @@ class WaypointUpdater(object):
         #geometry_msgs/PoseStamped pose
         #geometry_msgs/TwistStamped twist
         self.pose = msg.pose
-        #rospy.logwarn("Car position is updated to %s".format(self.pose))
+        rospy.logwarn("Car position is updated to %s".format(self.pose))
 
 
     def waypoints_cb(self, waypoints):
@@ -94,7 +94,7 @@ class WaypointUpdater(object):
             self.header = waypoints.header
             self.base_waypoints = waypoints.waypoints
             self.num_waypoints = len(self.base_waypoints)
-            rospy.logwarn("Way points header is {}".format(self.header))
+            #rospy.logwarn("Way points header is \n {}".format(self.header))
             #rospy.logwarn("Way points base waypoints is {}".format(self.base_waypoints))
             self.laneMsg = True
 

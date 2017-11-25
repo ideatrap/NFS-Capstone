@@ -87,7 +87,7 @@ class WaypointUpdater(object):
         for i, waypoint in enumerate (self.base_waypoints):
             #all the way points ahead
             wp_x = base_waypoints.pose.pose.position.x
-
+            rospy.logwarn("postion x: {}\n\n".format(wp_x))
 
 
 
@@ -124,7 +124,6 @@ class WaypointUpdater(object):
             self.num_waypoints = len(self.base_waypoints)
             self.laneMsg = True
 
-            rospy.logwarn("waypoints: \n{}\n\n".format(base_waypoints))
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
         #traffic light message

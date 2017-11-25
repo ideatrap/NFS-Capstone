@@ -95,7 +95,7 @@ class WaypointUpdater(object):
             self.base_waypoints = waypoints.waypoints
             self.num_waypoints = len(self.base_waypoints)
             rospy.logwarn("Way points header is {}".format(self.header))
-            rospy.logwarn("Way points base waypoints is {}".format(self.base_waypoints))
+            #rospy.logwarn("Way points base waypoints is {}".format(self.base_waypoints))
             self.laneMsg = True
 
     def traffic_cb(self, msg):
@@ -128,8 +128,8 @@ class WaypointUpdater(object):
     def traffic_sim_cb(self, msg):
         tl_header= msg.header
         tl_lights = msg.lights
-        rospy.logwarn("simulator traffic light: {}\n".format(tl_header))
-        rospy.logwarn("simulator traffic lights: {}\n\n".format(tl_lights))
+        #rospy.logwarn("simulator traffic light: {}\n".format(tl_header))
+        #rospy.logwarn("simulator traffic lights: {}\n\n".format(tl_lights))
 
 
 

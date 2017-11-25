@@ -78,10 +78,16 @@ class WaypointUpdater(object):
         if self.base_waypoints is None or self.pose is None:
             return
         #if there is valid way points
-        rospy.logwarn("starting next way points")
         pos_x = self.pose.position.x
         pos_y = self.pose.position.y
-        rospy.logwarn("Finding closest waypoint to car at position {}, {}".format(pos_x, pos_6y))
+        #rospy.logwarn("Car is at (X,Y): {}, {}".format(pos_x, pos_y))
+
+        #find the way point ahead
+        point_ahead = None
+        for i, waypoint in enumerate (self.base_waypoints):
+            #all the way points ahead
+            wp_x = base_waypoints.pose.pose.position.x
+
 
 
 
@@ -118,6 +124,7 @@ class WaypointUpdater(object):
             self.num_waypoints = len(self.base_waypoints)
             self.laneMsg = True
 
+            rospy.logwarn("waypoints: \n{}\n\n".format(base_waypoints))
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
         #traffic light message

@@ -20,36 +20,37 @@ Once you have created dbw_node, you will update this node to use the status of t
 Please note that our simulator also provides the exact location of traffic lights and their
 current status in `/vehicle/traffic_lights` message. You can use this message to build this node
 as well as to verify your TL classifier.
-
-TODO (for Yousuf and Aaron): Stopline location for each traffic light.
 '''
 
-LOOKAHEAD_WPS = 120 # Number of waypoints to look ahead of the car
+LOOKAHEAD_WPS = 100 # Number of waypoints to look ahead of the car
 
 
 class WaypointUpdater(object):
     def __init__(self):
         rospy.init_node('waypoint_updater')
 
-        max_velocity = rospy.get_param('/waypoint_loader/velocity')
-        rospy.logwarn("Max velocity: {}".format(max_velocity))
-        #self.max_velocity = max_velocity_kmph * KMPH2MPS
-        #rospy.logwarn("Max velocity: {0:.2f} km/h".format(max_velocity_kmph))
+        max_velocity_km = rospy.get_param('/waypoint_loader/velocity')
+        rospy.logwarn("Max velocity: {}KM/H".format(max_velocity))
+
+        #get track's way points
+        rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb, queue_size = 1)
 
         #subscribe to car's current position
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb, queue_size = 1)
-        rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb, queue_size = 1)
 
-        # TODO: Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
+
+        #Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
         #subscribe to car's current position
         #rospy.Subscriber('/current_velocity', TwistStamped, self.twist_cb, queue_size=1);
 
         #subscribe to the message from traffic light detection
         rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
 
-        #Debug subscribe to system's simulated traffic light info
-        rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_sim_cb)
-        rospy.Subscriber('/obstacle_waypoint', Int32, self.obstacle_cb)
+        #Subscribe to system's traffic light info
+        #rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_sim_cb)
+
+        #Subscribe to obstacle detection
+        #rospy.Subscriber('/obstacle_waypoint', Int32, self.obstacle_cb)
 
 
         #Publish final way points
@@ -163,7 +164,7 @@ class WaypointUpdater(object):
     def traffic_sim_cb(self, msg):
         tl_header= msg.header
         tl_lights = msg.lights
-        rospy.logwarn("simulator traffic lights: \n{}\n\n".format(tl_lights))
+        #rospy.logwarn("simulator traffic lights: \n{}\n\n".format(tl_lights))
 
 
 

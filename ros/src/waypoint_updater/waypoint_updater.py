@@ -92,6 +92,8 @@ class WaypointUpdater(object):
         min_dist = 9999999
         wp_ahead_index = -1
 
+        rospy.logwarn("distance: {}\n".format(min_dist))
+
         #if self.next_waypoint_index == -1: #first to identify the way point position
         for i, waypoint in enumerate (self.base_waypoints):
             #all way points

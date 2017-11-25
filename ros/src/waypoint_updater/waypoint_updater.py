@@ -50,7 +50,7 @@ class WaypointUpdater(object):
         #rospy.Subscriber('/vehicle/traffic_lights', TrafficLightArray, self.traffic_sim_cb)
 
         #Subscribe to obstacle detection
-        #rospy.Subscriber('/obstacle_waypoint', Int32, self.obstacle_cb)
+        rospy.Subscriber('/obstacle_waypoint', Int32, self.obstacle_cb)
 
 
         #Publish final way points
@@ -62,8 +62,7 @@ class WaypointUpdater(object):
         self.pose = None
 
         #waypoints_cb
-        self.header = None
-        self.laneMsg = False
+        self.wp_Msg = False
         self.base_waypoints = None
         self.num_waypoints = 0
 
@@ -83,21 +82,27 @@ class WaypointUpdater(object):
     def find_next_waypoint(self):
         if self.base_waypoints is None or self.pose is None:
             return
+
         #if there is valid way points
         pos_x = self.pose.position.x
         pos_y = self.pose.position.y
         #rospy.logwarn("Car is at (X,Y): {}, {}".format(pos_x, pos_y))
 
         #find the way point ahead
-        point_ahead = None
+        min_dist = 9999999
+        min_wp_found = False
+        wp_ahead_index = -1
 
-        for i, waypoint in enumerate (self.base_waypoints):
-            #all way points
-            wp_x = waypoint.pose.pose.position.x
-            wp_y = waypoint.pose.pose.position.y
-
-            #calculate the distance
-            #dist = self.distance()
+        if self.next_waypoint_index == -1: #first to identify the way point position
+            for i, waypoint in enumerate (self.base_waypoints):
+                #all way points
+                wp_x = waypoint.pose.pose.position.x
+                wp_y = waypoint.pose.pose.position.y
+                dist = self.distance(pos_x, pos_y, wp_x, wp_y)
+                if dist < min_dist:
+                    wp_ahead_index = i
+                    min_dist = dist
+        rospy.logwarn("Closest way point: {}".format(wp_ahead_index))
 
 
 
@@ -128,11 +133,10 @@ class WaypointUpdater(object):
         #Header header
         #Waypoint[] waypoints
         #if lane message hasn't been read
-        if not self.laneMsg:
-            self.header = waypoints.header
+        if not self.wp_Msg:
             self.base_waypoints = waypoints.waypoints
             self.num_waypoints = len(self.base_waypoints)
-            self.laneMsg = True
+            self.wp_Msg = True
 
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
@@ -153,13 +157,16 @@ class WaypointUpdater(object):
     def set_waypoint_velocity(self, waypoints, waypoint, velocity):
         waypoints[waypoint].twist.twist.linear.x = velocity
 
-    def distance(self, waypoints, wp1, wp2):
+    def distance_wp(self, waypoints, wp1, wp2):
         dist = 0
         dl = lambda a, b: math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2  + (a.z-b.z)**2)
         for i in range(wp1, wp2+1):
             dist += dl(waypoints[wp1].pose.pose.position, waypoints[i].pose.pose.position)
             wp1 = i
         return dist
+
+    def distance(self,x1,y1,x2,y2):
+        return math.sqrt((x2-x1)**2+(y2-y1)**2)
 
     def traffic_sim_cb(self, msg):
         tl_header= msg.header

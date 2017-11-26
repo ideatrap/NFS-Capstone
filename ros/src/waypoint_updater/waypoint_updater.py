@@ -104,7 +104,6 @@ class WaypointUpdater(object):
                     min_dist = dist
                 else:
                     break
-            rospy.logwarn("1111\n")
         else:#starts from known position
         #    rospy.logwarn("Current way point is \n{}\n".format(self.next_waypoint_index))
             end_index = min(self.next_waypoint_index+400, self.num_waypoints-1)
@@ -118,16 +117,13 @@ class WaypointUpdater(object):
                     min_dist = dist
                 else:
                     break
-            rospy.logwarn("2222\n")
         rospy.logwarn("distance is {}".format(min_dist))
+        #ensure the way points is ahead of the car
         if min_dist < 0:
             wp_ahead_index = wp_ahead_index + 1
-            #rospy.logwarn("next way point is \n{}\n".format(wp_ahead_index))
-        self.next_waypoint_index = wp_ahead_index
+            rospy.logwarn("switching ahead wp\n")
+        #self.next_waypoint_index = wp_ahead_index % self.num_waypoints
         rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
-
-
-
 
 
     def pose_cb(self, msg):

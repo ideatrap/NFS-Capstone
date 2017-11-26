@@ -93,32 +93,17 @@ class WaypointUpdater(object):
         wp_ahead_index = None
 
         #if self.next_waypoint_index is None: #first to identify the way point position
-        if self.next_waypoint_index == None:
-            rospy.logwarn("111\n")
-            #go through all way points
-            for i, waypoint in enumerate (self.base_waypoints):
-                wp_x = waypoint.pose.pose.position.x
-                wp_y = waypoint.pose.pose.position.y
-                dist = self.distance_wp(wp_x,wp_y,pos_x,pos_y)
-                if dist < min_dist:
-                    wp_ahead_index = i
-                    min_dist = dist
-                else:
-                    break
-        else:#starts from known position
-        #    rospy.logwarn("Current way point is \n{}\n".format(self.next_waypoint_index))
-            end_index = min((self.next_waypoint_index+300)% self.num_waypoints, self.num_waypoints-1)
-            rospy.logwarn("end index is {}\n".format(end_index))
-            for i, waypoint in enumerate(self.base_waypoints): #(self.base_waypoints[self.next_waypoint_index-2:end_index]):
-                wp_x = waypoint.pose.pose.position.x
-                wp_y = waypoint.pose.pose.position.y
-                dist = self.distance_wp(wp_x,wp_y,pos_x,pos_y)
-                if dist < min_dist:
-                    wp_ahead_index = i
-                    min_dist = dist
-                else:
-                    break
-                    rospy.logwarn("break\n")
+
+        for i, waypoint in enumerate(self.base_waypoints[self.next_waypoint_index:]):
+            wp_x = waypoint.pose.pose.position.x
+            wp_y = waypoint.pose.pose.position.y
+            dist = self.distance_wp(wp_x,wp_y,pos_x,pos_y)
+            if dist < min_dist:
+                wp_ahead_index = i
+                min_dist = dist
+            else:
+                break
+                rospy.logwarn("break\n")
         rospy.logwarn("distance is {}".format(min_dist))
         #ensure the way points is ahead of the car
         if min_dist < 0:

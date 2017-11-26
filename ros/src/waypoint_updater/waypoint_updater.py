@@ -74,21 +74,23 @@ class WaypointUpdater(object):
             rate.sleep()
 
     def publish(self):
+        wps_pub = Lane()
         self.find_next_waypoint()
-
         #determine the list of way points to publish
         if self.next_waypoint_index is not None:
+            wp_index = self.next_waypoint_index
             for i in range(LOOKAHEAD_WPS):
-                start_wp = self.base_waypoints[self.next_waypoint_index]
+                start_wp = self.base_waypoints[wp_index]
                 next_wp = Waypoint()
                 next_wp.pose = start_wp.pose
                 next_wp.twist = start_wp.twist
-        rospy.logwarn("way point index: {}\n".format(self.next_waypoint_index))
 
+                wps_pub.waypoints.append(next_wp)
 
+                wp_index = (wp_index+1) % self.num_waypoints
 
-        #self.final_waypoints_pub.publish(waypoints_project)
-        pass
+        rospy.logwarn('way points published:{}'.format(len(wps_pub.waypoints)))
+        self.final_waypoints_pub.publish(waypoints_project)
 
     def find_next_waypoint(self):
         if self.base_waypoints is None or self.pose is None:

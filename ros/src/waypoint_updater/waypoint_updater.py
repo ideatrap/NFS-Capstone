@@ -97,21 +97,22 @@ class WaypointUpdater(object):
             for i, waypoint in enumerate (self.base_waypoints):
                 wp_x = waypoint.pose.pose.position.x
                 wp_y = waypoint.pose.pose.position.y
-                dist = self.distance(wp_x,wp_y,pos_x,pos_y)
+                dist = self.distance_wp(wp_x,wp_y,pos_x,pos_y)
                 if dist < min_dist:
                     wp_ahead_index = i
                     min_dist = dist
         elif self.next_waypoint_index is not None:#starts from known position
         #    rospy.logwarn("Current way point is \n{}\n".format(self.next_waypoint_index))
             end_index = min(self.next_waypoint_index+50, self.num_waypoints-1)
+            rospy.logwarn("end index is {}".format(end_index))
             for j, waypoint in enumerate (self.base_waypoints[self.next_waypoint_index:end_index]):
                 wp_x = waypoint.pose.pose.position.x
                 wp_y = waypoint.pose.pose.position.y
-                dist = self.distance(wp_x,wp_y,pos_x,pos_y)
+                dist = self.distance_wp(wp_x,wp_y,pos_x,pos_y)
                 if dist < min_dist:
                     wp_ahead_index = j
                     min_dist = dist
-            rospy.logwarn("next way point is \n{}\n".format(wp_ahead_index))
+            #rospy.logwarn("next way point is \n{}\n".format(wp_ahead_index))
         self.next_waypoint_index = wp_ahead_index
         #rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
         return wp_ahead_index
@@ -171,7 +172,7 @@ class WaypointUpdater(object):
     def set_waypoint_velocity(self, waypoints, waypoint, velocity):
         waypoints[waypoint].twist.twist.linear.x = velocity
 
-    def distance_wp(self, waypoints, wp1, wp2):
+    def distance(self, waypoints, wp1, wp2):
         dist = 0
         dl = lambda a, b: math.sqrt((a.x-b.x)**2 + (a.y-b.y)**2  + (a.z-b.z)**2)
         for i in range(wp1, wp2+1):
@@ -179,7 +180,7 @@ class WaypointUpdater(object):
             wp1 = i
         return dist
 
-    def distance(self,x1,y1,x2,y2):
+    def distance_wp(self,x1,y1,x2,y2):
         return math.sqrt((x2-x1)**2+(y2-y1)**2)
 
     def traffic_sim_cb(self, msg):

@@ -90,7 +90,7 @@ class WaypointUpdater(object):
                 wp_index = (wp_index+1) % self.num_waypoints
 
         rospy.logwarn('way points published:{}'.format(len(wps_pub.waypoints)))
-        self.final_waypoints_pub.publish(waypoints_pub)
+        self.final_waypoints_pub.publish(wps_pub)
 
     def find_next_waypoint(self):
         if self.base_waypoints is None or self.pose is None:

@@ -103,7 +103,7 @@ class WaypointUpdater(object):
                     min_dist = dist
             self.next_waypoint_index = wp_ahead_index
         else:#starts from known position
-            for for i, waypoint in enumerate (self.base_waypoints[next_waypoint_index:next_waypoint_index+50]):
+            for for i, waypoint in enumerate (self.base_waypoints[:(next_waypoint_index+50)]):
                 wp_x = waypoint.pose.pose.position.x
                 wp_y = waypoint.pose.pose.position.y
                 dist = self.distance(wp_x,wp_y,pos_x, pos_y)

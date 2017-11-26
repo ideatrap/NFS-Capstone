@@ -92,19 +92,27 @@ class WaypointUpdater(object):
         min_dist = 9999999
         wp_ahead_index = -1
 
-        #if self.next_waypoint_index == -1: #first to identify the way point position
-        for i, waypoint in enumerate (self.base_waypoints):
-            #all way points
-            wp_x = waypoint.pose.pose.position.x
-            wp_y = waypoint.pose.pose.position.y
-            dist = self.distance(wp_x,wp_y,pos_x, pos_y)
-            if dist < min_dist:
-                wp_ahead_index = i
-                min_dist = dist
+        if self.next_waypoint_index == -1: #first to identify the way point position
+            #go through all way points
+            for i, waypoint in enumerate (self.base_waypoints):
+                wp_x = waypoint.pose.pose.position.x
+                wp_y = waypoint.pose.pose.position.y
+                dist = self.distance(wp_x,wp_y,pos_x, pos_y)
+                if dist < min_dist:
+                    wp_ahead_index = i
+                    min_dist = dist
+            self.next_waypoint_index = wp_ahead_index
+        else:#starts from known position
+            for for i, waypoint in enumerate (self.base_waypoints[next_waypoint_index:next_waypoint_index+50]):
+                wp_x = waypoint.pose.pose.position.x
+                wp_y = waypoint.pose.pose.position.y
+                dist = self.distance(wp_x,wp_y,pos_x, pos_y)
+                if dist < min_dist:
+                    wp_ahead_index = i
+                    min_dist = dist
+            self.next_waypoint_index = wp_ahead_index
+        rospy.logwarn("next way point is \n{}\n".format(next_waypoint_index))
 
-
-        self.next_waypoint_index = wp_ahead_index
-        rospy.logwarn("Closest way point: {}".format(wp_ahead_index))
 
 
 

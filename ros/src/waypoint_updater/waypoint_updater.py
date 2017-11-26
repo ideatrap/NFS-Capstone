@@ -93,7 +93,7 @@ class WaypointUpdater(object):
         wp_ahead_index = None
 
         #if self.next_waypoint_index is None: #first to identify the way point position
-        if True:
+        if self.next_waypoint_index is None:
             #go through all way points
             for i, waypoint in enumerate (self.base_waypoints):
                 wp_x = waypoint.pose.pose.position.x

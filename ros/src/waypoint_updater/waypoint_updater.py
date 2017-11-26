@@ -108,9 +108,8 @@ class WaypointUpdater(object):
         else:#starts from known position
         #    rospy.logwarn("Current way point is \n{}\n".format(self.next_waypoint_index))
             end_index = min((self.next_waypoint_index+300)% self.num_waypoints, self.num_waypoints-1)
-            rospy.logwarn("222\n")
             rospy.logwarn("end index is {}\n".format(end_index))
-            for i, waypoint in enumerate (self.base_waypoints[self.next_waypoint_index-2:end_index]):
+            for i, waypoint in enumerate(self.base_waypoints) #(self.base_waypoints[self.next_waypoint_index-2:end_index]):
                 wp_x = waypoint.pose.pose.position.x
                 wp_y = waypoint.pose.pose.position.y
                 dist = self.distance_wp(wp_x,wp_y,pos_x,pos_y)

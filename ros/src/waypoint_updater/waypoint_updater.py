@@ -76,6 +76,16 @@ class WaypointUpdater(object):
     def publish(self):
         self.find_next_waypoint()
 
+        #determine the list of way points to publish
+        for i range (LOOKAHEAD_WPS):
+            start_wp = self.base_waypoints[self.next_waypoint_index]
+            next_wp = Waypoint()
+            next_wp.pose = start_wp.pose
+            next_wp.twist = start_wp.twist
+        rospy.logwarn("way point index: {}\n".format(self.next_waypoint_index))
+
+
+
         #self.final_waypoints_pub.publish(waypoints_project)
         pass
 
@@ -94,23 +104,22 @@ class WaypointUpdater(object):
 
         #if self.next_waypoint_index is None: #first to identify the way point position
 
-        for i, waypoint in enumerate(self.base_waypoints[self.next_waypoint_index:]):
+        for i, waypoint in enumerate(self.base_waypoints):
             wp_x = waypoint.pose.pose.position.x
             wp_y = waypoint.pose.pose.position.y
             dist = self.distance_wp(wp_x,wp_y,pos_x,pos_y)
             if dist < min_dist:
                 wp_ahead_index = i
                 min_dist = dist
-            else:
+            else:#stop if the min distance is not decreasing
                 break
-                rospy.logwarn("break\n")
-        rospy.logwarn("distance is {}".format(min_dist))
+        #rospy.logwarn("distance is {}".format(min_dist))
+
         #ensure the way points is ahead of the car
         if min_dist < 0:
             wp_ahead_index = wp_ahead_index + 1
-            rospy.logwarn("switching ahead wp\n")
         self.next_waypoint_index = wp_ahead_index % self.num_waypoints
-        rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
+        #rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
 
 
     def pose_cb(self, msg):

@@ -77,11 +77,12 @@ class WaypointUpdater(object):
         self.find_next_waypoint()
 
         #determine the list of way points to publish
-        for i range (LOOKAHEAD_WPS):
-            start_wp = self.base_waypoints[self.next_waypoint_index]
-            next_wp = Waypoint()
-            next_wp.pose = start_wp.pose
-            next_wp.twist = start_wp.twist
+        if self.next_waypoint_index is not None:
+            for i in range(LOOKAHEAD_WPS):
+                start_wp = self.base_waypoints[self.next_waypoint_index]
+                next_wp = Waypoint()
+                next_wp.pose = start_wp.pose
+                next_wp.twist = start_wp.twist
         rospy.logwarn("way point index: {}\n".format(self.next_waypoint_index))
 
 

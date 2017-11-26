@@ -74,7 +74,7 @@ class WaypointUpdater(object):
             rate.sleep()
 
     def publish(self):
-        self.next_waypoint_index = self.find_next_waypoint()
+        self.find_next_waypoint()
 
         #self.final_waypoints_pub.publish(waypoints_project)
         pass
@@ -103,7 +103,7 @@ class WaypointUpdater(object):
                     min_dist = dist
         elif self.next_waypoint_index is not None:#starts from known position
         #    rospy.logwarn("Current way point is \n{}\n".format(self.next_waypoint_index))
-            end_index = min(self.next_waypoint_index+50, self.num_waypoints-1)
+            end_index = min(self.next_waypoint_index+100, self.num_waypoints-1)
             rospy.logwarn("end index is {}".format(end_index))
             for j, waypoint in enumerate (self.base_waypoints[self.next_waypoint_index:end_index]):
                 wp_x = waypoint.pose.pose.position.x
@@ -115,7 +115,6 @@ class WaypointUpdater(object):
             #rospy.logwarn("next way point is \n{}\n".format(wp_ahead_index))
         self.next_waypoint_index = wp_ahead_index
         #rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
-        return wp_ahead_index
 
 
 

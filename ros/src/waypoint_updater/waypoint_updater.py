@@ -103,8 +103,9 @@ class WaypointUpdater(object):
             #distance to the next traffic light
             distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
 
-        self.current_velocity = self.twist.twist.linear.x
-        ropy.logwarn("Current velocity is {}\n".format(self.current_velocity))
+        if self.twist is not None:
+            self.current_velocity = self.twist.twist.linear.x
+            ropy.logwarn("Current velocity is {}\n".format(self.current_velocity))
         self.final_waypoints_pub.publish(wps_pub)
 
     def find_next_waypoint(self):

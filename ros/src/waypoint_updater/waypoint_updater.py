@@ -30,14 +30,14 @@ class WaypointUpdater(object):
         rospy.init_node('waypoint_updater')
 
         max_velocity_km = rospy.get_param('/waypoint_loader/velocity')
-        rospy.logwarn("Max velocity: {}KM/H".format(max_velocity_km))
+        max_velocity_mph = 0.62137119223734 * max_velocity_km
+        rospy.logwarn("Max velocity: {:.2f}KM/H, or {:.2f}M/H".format(max_velocity_km,max_velocity_mph))
 
         #get track's way points
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb, queue_size = 1)
 
         #subscribe to car's current position
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb, queue_size = 1)
-
 
         #subscribe to car's current velocity
         rospy.Subscriber('/current_velocity', TwistStamped, self.twist_cb, queue_size=1);

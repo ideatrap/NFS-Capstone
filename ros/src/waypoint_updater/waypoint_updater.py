@@ -69,6 +69,9 @@ class WaypointUpdater(object):
         #twist_cb
         self.twist = None
 
+        #traffic_cb
+        self.red_light_index = None
+
         rate = rospy.Rate(30)
         while not rospy.is_shutdown():
             self.publish()
@@ -91,6 +94,15 @@ class WaypointUpdater(object):
                 wp_index = (wp_index+1) % self.num_waypoints
 
         #rospy.logwarn('way points published:{}'.format(len(wps_pub.waypoints)))
+
+
+        #determine whether to stop
+
+        if self.red_light_index is not None:
+            #distance to the next traffic light
+            distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
+
+
         self.final_waypoints_pub.publish(wps_pub)
 
     def find_next_waypoint(self):
@@ -122,6 +134,7 @@ class WaypointUpdater(object):
             wp_ahead_index = wp_ahead_index + 1
         self.next_waypoint_index = wp_ahead_index % self.num_waypoints
         #rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
+
 
 
     def pose_cb(self, msg):
@@ -159,8 +172,7 @@ class WaypointUpdater(object):
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
         #traffic light message
-        tl = msg.data
-        pass
+        self.red_light_index = msg.data
 
     def obstacle_cb(self, msg):
         # TODO: Callback for /obstacle_waypoint message. We will implement it later

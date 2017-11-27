@@ -30,8 +30,8 @@ class WaypointUpdater(object):
         rospy.init_node('waypoint_updater')
 
         max_velocity_km = rospy.get_param('/waypoint_loader/velocity')
-        max_velocity_mph = 0.62137119223734 * max_velocity_km
-        rospy.logwarn("Max velocity: {:.2f}KM/H, or {:.2f}M/H".format(max_velocity_km,max_velocity_mph))
+        self.max_velocity_mph = 0.62137119223734 * max_velocity_km
+        rospy.logwarn("Max velocity: {:.2f}KM/H, or {:.2f}M/H".format(max_velocity_km, self.max_velocity_mph))
 
         #get track's way points
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb, queue_size = 1)
@@ -64,7 +64,6 @@ class WaypointUpdater(object):
         self.wp_Msg = False
         self.base_waypoints = None
         self.num_waypoints = 0
-
         self.next_waypoint_index = None
 
         #twist_cb
@@ -103,11 +102,9 @@ class WaypointUpdater(object):
         pos_y = self.pose.position.y
         #rospy.logwarn("Car is at (X,Y): {}, {}".format(pos_x, pos_y))
 
-        #find the way point ahead
+        #find the closest way point ahead
         min_dist = 9999999
         wp_ahead_index = None
-
-        #if self.next_waypoint_index is None: #first to identify the way point position
 
         for i, waypoint in enumerate(self.base_waypoints):
             wp_x = waypoint.pose.pose.position.x

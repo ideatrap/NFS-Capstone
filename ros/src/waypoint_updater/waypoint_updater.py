@@ -24,6 +24,13 @@ as well as to verify your TL classifier.
 
 LOOKAHEAD_WPS = 100 # Number of waypoints to look ahead of the car
 
+BRAKING = 0
+STOPPED = 1
+ACCELERATING = 2
+
+DISTANCE_TO_STOP  = 10 #acceleration should not exceed 10 m/s^2 and jerk should not exceed 10 m/s^3
+
+
 
 class WaypointUpdater(object):
     def __init__(self):
@@ -73,6 +80,9 @@ class WaypointUpdater(object):
         #traffic_cb
         self.red_light_index = None
 
+        #car state
+        self.state = STOPPED
+
         rate = rospy.Rate(30)
         while not rospy.is_shutdown():
             self.publish()
@@ -82,6 +92,16 @@ class WaypointUpdater(object):
         wps_pub = Lane()
         self.find_next_waypoint()
         #determine the list of way points to publish
+
+        if self.red_light_index is not None:
+            #distance to the next traffic light
+            distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
+            rospy.logwarn("The car is {}M away from the red light".format(distance_tl))
+
+        if self.twist is not None:
+            self.current_velocity = self.twist.twist.linear.x
+            #rospy.logwarn("Current speed is {}".format(self.current_velocity))
+
         if self.next_waypoint_index is not None:
             wp_index = self.next_waypoint_index
             for i in range(LOOKAHEAD_WPS):
@@ -91,21 +111,10 @@ class WaypointUpdater(object):
                 next_wp.twist = start_wp.twist
 
                 wps_pub.waypoints.append(next_wp)
-
                 wp_index = (wp_index+1) % self.num_waypoints
 
         #rospy.logwarn('way points published:{}'.format(len(wps_pub.waypoints)))
 
-
-        #determine whether to stop
-
-        if self.red_light_index is not None:
-            #distance to the next traffic light
-            distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
-
-        if self.twist is not None:
-            self.current_velocity = self.twist
-            rospy.logwarn("Current velocity is {}\n".format(self.current_velocity))
         self.final_waypoints_pub.publish(wps_pub)
 
     def find_next_waypoint(self):

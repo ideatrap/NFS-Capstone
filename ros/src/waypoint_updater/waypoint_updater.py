@@ -68,6 +68,7 @@ class WaypointUpdater(object):
 
         #twist_cb
         self.twist = None
+        self.current_velocity = None
 
         #traffic_cb
         self.red_light_index = None
@@ -102,7 +103,8 @@ class WaypointUpdater(object):
             #distance to the next traffic light
             distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
 
-
+        self.current_velocity = self.twist.twist.linear.x
+        ropy.logwarn("Current velocity is {}\n".format(self.current_velocity))
         self.final_waypoints_pub.publish(wps_pub)
 
     def find_next_waypoint(self):
@@ -133,7 +135,7 @@ class WaypointUpdater(object):
         if min_dist < 0:
             wp_ahead_index = wp_ahead_index + 1
         self.next_waypoint_index = wp_ahead_index % self.num_waypoints
-        rospy.logwarn("twist content: {}".format(self.base_waypoints[wp_ahead_index].twist))
+        #rospy.logwarn("twist content: {}".format(self.base_waypoints[wp_ahead_index].twist))
         #rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
 
 
@@ -180,7 +182,26 @@ class WaypointUpdater(object):
         pass
 
     def twist_cb(self, msg):
-        self.twist = msg.twist
+        self.twist = msg
+
+        '''
+        sample twist message:
+        header:
+                seq: 0
+            stamp:
+                secs: 0
+                nsecs:  0
+            frame_id: ''
+        twist:
+          linear:
+            x: 11.1111111111
+            y: 0.0
+            z: 0.0
+          angular:
+            x: 0.0
+            y: 0.0
+            z: 0.0
+        '''
 
 
     def get_waypoint_velocity(self, waypoint):

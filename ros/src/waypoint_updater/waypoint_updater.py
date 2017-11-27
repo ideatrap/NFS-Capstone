@@ -39,9 +39,8 @@ class WaypointUpdater(object):
         rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb, queue_size = 1)
 
 
-        #Add a subscriber for /traffic_waypoint and /obstacle_waypoint below
-        #subscribe to car's current position
-        #rospy.Subscriber('/current_velocity', TwistStamped, self.twist_cb, queue_size=1);
+        #subscribe to car's current velocity
+        rospy.Subscriber('/current_velocity', TwistStamped, self.twist_cb, queue_size=1);
 
         #subscribe to the message from traffic light detection
         rospy.Subscriber('/traffic_waypoint', Int32, self.traffic_cb)
@@ -67,6 +66,9 @@ class WaypointUpdater(object):
         self.num_waypoints = 0
 
         self.next_waypoint_index = None
+
+        #twist_cb
+        self.twist = None
 
         rate = rospy.Rate(30)
         while not rospy.is_shutdown():
@@ -161,13 +163,14 @@ class WaypointUpdater(object):
         # TODO: Callback for /traffic_waypoint message. Implement
         #traffic light message
         tl = msg.data
-        if tl >= 0: #if any traffic light is detected
-            pass
+        pass
 
     def obstacle_cb(self, msg):
         # TODO: Callback for /obstacle_waypoint message. We will implement it later
         pass
 
+    def twist_cb(self, msg):
+        self.twist = msg.twist
 
 
     def get_waypoint_velocity(self, waypoint):

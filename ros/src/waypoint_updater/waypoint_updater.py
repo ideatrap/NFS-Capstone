@@ -112,7 +112,8 @@ class WaypointUpdater(object):
         #Stop the car if it cannot pass the line within 2 seconds
         if distance_tl and distance_tl / self.current_velocity > 2:
             set_speed = 0
-        else  set_speed = max_velocity_km
+        else:
+            set_speed = max_velocity_km
 
 
         if self.next_waypoint_index is not None:

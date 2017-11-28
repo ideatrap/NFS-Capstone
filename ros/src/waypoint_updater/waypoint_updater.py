@@ -96,12 +96,12 @@ class WaypointUpdater(object):
         if self.red_light_index and self.next_waypoint_index:
             #distance to the next traffic light
             distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
-            rospy.logwarn("The car is {}M away from the red light".format(distance_tl))
+            rospy.logwarn("The car is {:.2f} meters away from the red light".format(distance_tl))
 
-        if self.twist is not None:
+        if self.twist:
             self.current_velocity = self.twist.twist.linear.x #meters per second
             self.current_velocity = 2.23694 * self.current_velocity # miles per hour
-            rospy.logwarn("Current speed is {}".format(self.current_velocity))
+            #rospy.logwarn("Current speed is {:.2f}".format(self.current_velocity))
 
         if self.next_waypoint_index is not None:
             wp_index = self.next_waypoint_index

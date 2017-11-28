@@ -82,9 +82,6 @@ class WaypointUpdater(object):
         #traffic_cb
         self.red_light_index = None
 
-        #car state
-        self.state = STOPPED
-
         rate = rospy.Rate(30)
         while not rospy.is_shutdown():
             self.publish()

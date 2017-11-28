@@ -24,12 +24,14 @@ as well as to verify your TL classifier.
 
 LOOKAHEAD_WPS = 100 # Number of waypoints to look ahead of the car
 
-BRAKING = 0
-STOPPED = 1
-ACCELERATING = 2
+DIST_LIGHT_LINE = 3 #distance from the stop line to the traffic light
 
-DISTANCE_TO_STOP  = 10 #acceleration should not exceed 10 m/s^2 and jerk should not exceed 10 m/s^3
-
+'''
+GREEN = 2
+YELLOW = 1
+RED = 0
+UNKNOWN = 4
+'''
 
 
 class WaypointUpdater(object):
@@ -75,7 +77,7 @@ class WaypointUpdater(object):
 
         #twist_cb
         self.twist = None
-        self.current_velocity = None
+        self.current_velocity = None #meter per second
 
         #traffic_cb
         self.red_light_index = None
@@ -93,15 +95,25 @@ class WaypointUpdater(object):
         self.find_next_waypoint()
         #determine the list of way points to publish
 
+        distance_tl = None
+        #check red light distance
         if self.red_light_index and self.next_waypoint_index:
             #distance to the next traffic light
             distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
-            rospy.logwarn("The car is {:.2f} meters away from the red light".format(distance_tl))
+            distance_tl = distance_tl - DIST_LIGHT_LINE #minus the distance from stop line to the traffic light
+            rospy.logwarn("Car is {:.2f} meters from the red light".format(distance_tl))
 
+        #check car's current speed
         if self.twist:
             self.current_velocity = self.twist.twist.linear.x #meters per second
-            self.current_velocity = 2.23694 * self.current_velocity # miles per hour
-            #rospy.logwarn("Current speed is {:.2f}".format(self.current_velocity))
+            self.current_velocity_mph = 2.23694 * self.current_velocity # miles per hour
+            #rospy.logwarn("Current speed is {:.2f} MPH".format(self.current_velocity_mph))
+
+        #Stop the car if it cannot pass the line within 2 seconds
+        if distance_tl and distance_tl / self.current_velocity > 2:
+            set_speed = 0
+        else  set_speed = max_velocity_km
+
 
         if self.next_waypoint_index is not None:
             wp_index = self.next_waypoint_index
@@ -110,6 +122,7 @@ class WaypointUpdater(object):
                 next_wp = Waypoint()
                 next_wp.pose = start_wp.pose
                 next_wp.twist = start_wp.twist
+                next_wp.twist.twist.linear.x = set_speed
 
                 wps_pub.waypoints.append(next_wp)
                 wp_index = (wp_index+1) % self.num_waypoints

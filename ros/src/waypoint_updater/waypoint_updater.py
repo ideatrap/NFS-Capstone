@@ -94,6 +94,7 @@ class WaypointUpdater(object):
 
         distance_tl = None
         #check red light distance
+        #TODO will it detect yellow light?
         if self.red_light_index and self.next_waypoint_index:
             #distance to the next traffic light
             distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)

@@ -93,7 +93,7 @@ class WaypointUpdater(object):
         self.find_next_waypoint()
         #determine the list of way points to publish
 
-        if self.red_light_index is not None:
+        if self.red_light_index and self.next_waypoint_index:
             #distance to the next traffic light
             distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
             rospy.logwarn("The car is {}M away from the red light".format(distance_tl))

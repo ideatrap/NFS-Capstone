@@ -39,7 +39,7 @@ class WaypointUpdater(object):
         rospy.init_node('waypoint_updater')
 
         self.max_velocity_km = rospy.get_param('/waypoint_loader/velocity')
-        self.max_velocity_mph = 0.62137119223734 * max_velocity_km
+        self.max_velocity_mph = 0.62137119223734 * self.max_velocity_km
         rospy.logwarn("Max velocity: {:.2f}KM/H, or {:.2f}M/H".format(self.max_velocity_km, self.max_velocity_mph))
 
         #get track's way points

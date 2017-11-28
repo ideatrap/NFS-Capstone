@@ -38,9 +38,9 @@ class WaypointUpdater(object):
     def __init__(self):
         rospy.init_node('waypoint_updater')
 
-        max_velocity_km = rospy.get_param('/waypoint_loader/velocity')
+        self.max_velocity_km = rospy.get_param('/waypoint_loader/velocity')
         self.max_velocity_mph = 0.62137119223734 * max_velocity_km
-        rospy.logwarn("Max velocity: {:.2f}KM/H, or {:.2f}M/H".format(max_velocity_km, self.max_velocity_mph))
+        rospy.logwarn("Max velocity: {:.2f}KM/H, or {:.2f}M/H".format(self.max_velocity_km, self.max_velocity_mph))
 
         #get track's way points
         rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb, queue_size = 1)
@@ -110,7 +110,7 @@ class WaypointUpdater(object):
         if distance_tl and distance_tl / self.current_velocity > 2:
             set_speed = 0
         else:
-            set_speed = max_velocity_km
+            set_speed = self.max_velocity_km
 
 
         if self.next_waypoint_index is not None:

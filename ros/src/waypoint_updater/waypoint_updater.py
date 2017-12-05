@@ -150,9 +150,8 @@ class WaypointUpdater(object):
             if dist < min_dist:
                 wp_ahead_index = i
                 min_dist = dist
-            else:#stop if the min distance is not decreasing
-                break
-        #rospy.logwarn("distance is {}".format(min_dist))
+
+         #rospy.logwarn("distance is {}".format(min_dist))
 
         #ensure the way points is ahead of the car
         if min_dist < 0:

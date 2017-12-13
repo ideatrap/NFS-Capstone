@@ -155,9 +155,10 @@ class WaypointUpdater(object):
 
 
          #ensure the way points is ahead of the car
-         if min_dist < 0:
-             wp_ahead_index = wp_ahead_index + 1
-         self.next_waypoint_index = wp_ahead_index % self.num_waypoints
+        if min_dist < 0:
+            wp_ahead_index = wp_ahead_index + 1
+
+        self.next_waypoint_index = wp_ahead_index % self.num_waypoints
 
         #rospy.logwarn("twist content: {}".format(self.base_waypoints[wp_ahead_index].twist))
         #rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))

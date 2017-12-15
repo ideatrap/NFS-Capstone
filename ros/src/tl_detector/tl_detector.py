@@ -27,6 +27,8 @@ class TLDetector(object):
         self.light_xy_array = []
         self.light_wp_array = []
         self.got_light_array = 0
+        self.got_waypoints = 0
+        self.use_classifier = 1
      
 
         sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
@@ -48,7 +50,8 @@ class TLDetector(object):
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
         self.bridge = CvBridge()
-        self.light_classifier = TLClassifier()
+        if self.use_classifier == 1:
+            self.light_classifier = TLClassifier()
         self.listener = tf.TransformListener()
 
         self.state = TrafficLight.UNKNOWN
@@ -64,6 +67,7 @@ class TLDetector(object):
     def waypoints_cb(self, waypoints):
         self.waypoints = waypoints.waypoints
         self.num_waypoints = len(self.waypoints)
+        self.got_waypoints = 1
         rospy.logwarn("Waypoints (waypoints): {}".format(self.num_waypoints))
 
     def traffic_cb(self, msg):
@@ -169,7 +173,11 @@ class TLDetector(object):
             int: ID of traffic light color (specified in styx_msgs/TrafficLight)
 
         """
-        light = None
+  
+        if self.got_waypoints == 0:
+            return -1, TrafficLight.UNKNOWN
+     
+        light = self.use_classifier
 
         # List of positions that correspond to the line to stop in front of for a given intersection
         stop_line_positions = self.config['stop_line_positions']
@@ -203,18 +211,22 @@ class TLDetector(object):
         rospy.logwarn("Car pos (i,X,Y): {},{},{}".format(car_position,self.waypoints[car_position].pose.pose.position.x, self.waypoints[car_position].pose.pose.position.y))
         rospy.logwarn("Closest light (i,X,Y): {},{},{}".format(close_id, self.light_xy_array[close_id].pose.position.x, self.light_xy_array[close_id].pose.position.y))
         rospy.logwarn("Signal: {}".format(self.lights[close_id].state))
-        
-        #Send Ground truth till the classifier is ready
-        state = self.lights[close_id].state
+       
+        #Use the ground truth just for debugging 
+        state_gt = self.lights[close_id].state
         light_wp = self.light_wp_array[close_id]
         dist_2_signal = light_wp - car_position
         if dist_2_signal < 0:
             dist_2_signal = self.num_waypoints - 1 - car_position + light_wp
         rospy.logwarn("Dist: {}".format(dist_2_signal))
    
-        if light:
-            state = self.get_light_state(light)
-            return light_wp, state
+        if light == 1:
+            state_classified = self.get_light_state(light)
+            state = state_classified
+            #return light_wp, state
+            rospy.logwarn("Signal GT, Signal Classified: {},{}".format(state_gt, state_classified))
+        else:
+            state = state_gt
         #self.waypoints = None
         #If the distance to the stop line is less than the threshhold
         #then publish the closest waypoint index to waypoint updater

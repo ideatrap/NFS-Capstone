@@ -200,7 +200,7 @@ class WaypointUpdater(object):
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
         #traffic light message
-        if msg.data ! = -1:
+        if msg.data > -1:
             self.red_light_index = msg.data
 
     def obstacle_cb(self, msg):

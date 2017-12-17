@@ -181,6 +181,7 @@ class TLDetector(object):
 
         # List of positions that correspond to the line to stop in front of for a given intersection
         stop_line_positions = self.config['stop_line_positions']
+        car_position = None
         if(self.pose):
             car_position = self.get_closest_waypoint(self.pose)
 
@@ -208,9 +209,9 @@ class TLDetector(object):
                 min_dist = dist
                 close_id = i
 
-        rospy.logwarn("Car pos (i,X,Y): {},{},{}".format(car_position,self.waypoints[car_position].pose.pose.position.x, self.waypoints[car_position].pose.pose.position.y))
-        rospy.logwarn("Closest light (i,X,Y): {},{},{}".format(close_id, self.light_xy_array[close_id].pose.position.x, self.light_xy_array[close_id].pose.position.y))
-        rospy.logwarn("Signal: {}".format(self.lights[close_id].state))
+        #rospy.logwarn("Car pos (i,X,Y): {},{},{}".format(car_position,self.waypoints[car_position].pose.pose.position.x, self.waypoints[car_position].pose.pose.position.y))
+        #rospy.logwarn("Closest light (i,X,Y): {},{},{}".format(close_id, self.light_xy_array[close_id].pose.position.x, self.light_xy_array[close_id].pose.position.y))
+        #rospy.logwarn("Signal: {}".format(self.lights[close_id].state))
 
         #Use the ground truth just for debugging
         state_gt = self.lights[close_id].state

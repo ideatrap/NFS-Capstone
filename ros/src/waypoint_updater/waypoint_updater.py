@@ -160,8 +160,8 @@ class WaypointUpdater(object):
 
         self.next_waypoint_index = wp_ahead_index % self.num_waypoints
 
-        #rospy.logwarn("twist content: {}".format(self.base_waypoints[wp_ahead_index].twist))
-        rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
+        rospy.logwarn("Next way point content is {}".format(self.base_waypoints[next_waypoint_index].twist))
+        #rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
 
 
 

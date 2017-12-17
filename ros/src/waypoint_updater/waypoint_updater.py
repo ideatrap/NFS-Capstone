@@ -151,6 +151,7 @@ class WaypointUpdater(object):
                 wp_ahead_index = i
                 min_dist = dist
 
+            rospy.logwarn("wp_x is {}".format(wp_x))
          #rospy.logwarn("distance is {}".format(min_dist))
 
 
@@ -160,8 +161,8 @@ class WaypointUpdater(object):
 
         self.next_waypoint_index = wp_ahead_index % self.num_waypoints
 
-        rospy.logwarn("Next way point content is {}".format(self.base_waypoints[self.next_waypoint_index].twist))
-        #rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
+        rospy.logwarn("Next way point content is {}".format(self.base_waypoints[self.next_waypoint_index]))
+        rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
 
 
 

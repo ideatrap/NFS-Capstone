@@ -126,7 +126,7 @@ class WaypointUpdater(object):
                 wps_pub.waypoints.append(next_wp)
                 wp_index = (wp_index+1) % self.num_waypoints
 
-        rospy.logwarn('Next way point published:{}'.format(wps_pub))
+        #rospy.logwarn('Next way point published:{}'.format(wps_pub))
         #rospy.logwarn('way points published:{}'.format(len(wps_pub.waypoints)))
 
         self.final_waypoints_pub.publish(wps_pub)
@@ -200,9 +200,10 @@ class WaypointUpdater(object):
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
         #traffic light message
+        rospy.logwarn("red light message is".format(red_light_index))
         if msg.data > -1:
             self.red_light_index = msg.data
-            rospy.logwarn("red light message is".format(red_light_index))
+
 
     def obstacle_cb(self, msg):
         # TODO: Callback for /obstacle_waypoint message. We will implement it later

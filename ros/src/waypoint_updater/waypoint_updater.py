@@ -119,13 +119,14 @@ class WaypointUpdater(object):
             for i in range(LOOKAHEAD_WPS):
                 start_wp = self.base_waypoints[wp_index]
                 next_wp = Waypoint()
-                next_wp.pose = start_wp.pose
-                next_wp.twist = start_wp.twist
+                next_wp.pose = start_wp.pose #position
+                next_wp.twist = start_wp.twist #Speed
                 next_wp.twist.twist.linear.x = set_speed
 
                 wps_pub.waypoints.append(next_wp)
                 wp_index = (wp_index+1) % self.num_waypoints
 
+        rospy.logwarn('Next way point published:{}'.format(wps_pub))
         #rospy.logwarn('way points published:{}'.format(len(wps_pub.waypoints)))
 
         self.final_waypoints_pub.publish(wps_pub)
@@ -150,8 +151,6 @@ class WaypointUpdater(object):
             if dist < min_dist:
                 wp_ahead_index = i
                 min_dist = dist
-
-            rospy.logwarn("wp_x is {}".format(wp_x))
          #rospy.logwarn("distance is {}".format(min_dist))
 
 
@@ -161,8 +160,8 @@ class WaypointUpdater(object):
 
         self.next_waypoint_index = wp_ahead_index % self.num_waypoints
 
-        rospy.logwarn("Next way point content is {}".format(self.base_waypoints[self.next_waypoint_index]))
-        rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
+        #rospy.logwarn("Next way point content is {}".format(self.base_waypoints[self.next_waypoint_index]))
+        #rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
 
 
 

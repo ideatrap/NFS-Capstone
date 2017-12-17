@@ -202,6 +202,7 @@ class WaypointUpdater(object):
         #traffic light message
         if msg.data > -1:
             self.red_light_index = msg.data
+            rospy.logwarn("red light message is".format(red_light_index))
 
     def obstacle_cb(self, msg):
         # TODO: Callback for /obstacle_waypoint message. We will implement it later

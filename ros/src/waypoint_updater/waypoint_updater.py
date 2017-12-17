@@ -24,7 +24,7 @@ as well as to verify your TL classifier.
 
 LOOKAHEAD_WPS = 100 # Number of waypoints to look ahead of the car
 
-DIST_LIGHT_LINE = 3 #distance from the stop line to the traffic light
+DIST_LIGHT_LINE = 4 #distance from the stop line to the traffic light
 
 '''
 GREEN = 1
@@ -200,7 +200,7 @@ class WaypointUpdater(object):
     def traffic_cb(self, msg):
         # TODO: Callback for /traffic_waypoint message. Implement
         #traffic light message
-        red_light_index = msg.data
+        self.red_light_index = msg.data
         if msg.data > -1:
             self.red_light_index = msg.data
         rospy.logwarn("red light message is".format(self.red_light_index))

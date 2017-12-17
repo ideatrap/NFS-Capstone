@@ -27,10 +27,10 @@ LOOKAHEAD_WPS = 100 # Number of waypoints to look ahead of the car
 DIST_LIGHT_LINE = 3 #distance from the stop line to the traffic light
 
 '''
-GREEN = 2
-YELLOW = 1
-RED = 0
-UNKNOWN = 4
+GREEN = 1
+RED = 2
+YELLOW = 7
+UNKNOWN = -1
 '''
 
 
@@ -160,7 +160,7 @@ class WaypointUpdater(object):
 
         self.next_waypoint_index = wp_ahead_index % self.num_waypoints
 
-        #rospy.logwarn("twist content: {}".format(self.base_waypoints[wp_ahead_index].twist))
+        rospy.logwarn("twist content: {}".format(self.base_waypoints[wp_ahead_index].twist))
         #rospy.logwarn("next way point is \n{}\n".format(self.next_waypoint_index))
 
 

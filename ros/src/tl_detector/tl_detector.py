@@ -47,6 +47,7 @@ class TLDetector(object):
         config_string = rospy.get_param("/traffic_light_config")
         self.config = yaml.load(config_string)
 
+
         self.upcoming_red_light_pub = rospy.Publisher('/traffic_waypoint', Int32, queue_size=1)
 
         self.bridge = CvBridge()
@@ -102,6 +103,8 @@ class TLDetector(object):
         else:
             self.upcoming_red_light_pub.publish(Int32(self.last_wp))
         self.state_count += 1
+
+        rospy.logwarn("next traffic light position is {}".format(self.last_wp))
 
     def distance_wp(self,x1,y1,x2,y2):
         return math.sqrt((x2-x1)**2+(y2-y1)**2)

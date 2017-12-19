@@ -100,7 +100,7 @@ class WaypointUpdater(object):
             distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
             rospy.logwarn("Index: waypoint, redlight {}, {}".format(self.next_waypoint_index,self.red_light_index))
             distance_tl = distance_tl - DIST_LIGHT_LINE #minus the distance from stop line to the traffic light
-            #rospy.logwarn("Car is {:.2f} meters from the red light".format(distance_tl))
+            rospy.logwarn("Car is {:.2f} meters from the red light".format(distance_tl))
 
         #check car's current speed
         if self.twist:
@@ -202,9 +202,7 @@ class WaypointUpdater(object):
         # TODO: Callback for /traffic_waypoint message. Implement
         #traffic light message
         self.red_light_index = msg.data
-        if msg.data > -1:
-            self.red_light_index = msg.data
-        rospy.logwarn("red light message is".format(self.red_light_index))
+        #rospy.logwarn("red light message is".format(self.red_light_index))
 
 
     def obstacle_cb(self, msg):

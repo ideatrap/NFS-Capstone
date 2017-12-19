@@ -23,4 +23,7 @@
 
     <!--Camera Info Publisher -->
     <include file="$(find camera_info_publisher)/launch/camera_info_publisher.launch"/>
+    
+    <!--Simulator/Site Flag -->
+    <param name="use_simulator" value="False" />
 </launch>

@@ -13,11 +13,18 @@ import cv2
 class TLClassifier(object):
     def __init__(self):
         #TODO load classifier
+        sim = rospy.get_param("/use_simulator")
+        #rospy.logwarn("sim {}".format(sim)) 
         curr_path = os.getcwd()
         classifier_path = curr_path+'/light_classification'
-        self.path_to_ckpt =  classifier_path + '/sim_model/frozen_inference_graph.pb'
+        if sim == True:
+            rospy.logwarn("On Simulator")
+            self.path_to_ckpt =  classifier_path + '/model/frozen_inference_graph_sim.pb'
+        else:
+            rospy.logwarn("On Site")
+            self.path_to_ckpt =  classifier_path + '/model/frozen_inference_graph_real.pb'
         # List of the strings that is used to add correct label for each box.
-        self.path_to_labels = classifier_path + '/sim_model/sim_label_map.pbtxt'
+        self.path_to_labels = classifier_path + '/model/model_label_map.pbtxt'
         self.detection_graph = tf.Graph()
         with self.detection_graph.as_default():
             od_graph_def = tf.GraphDef()
@@ -28,11 +35,6 @@ class TLClassifier(object):
         self.detection_graph.as_default()
         self.sess = tf.Session(graph=self.detection_graph)
         pass
-
-    def load_image_into_numpy_array(self, image):
-        rospy.logwarn("image.shape: w,h,c {},{},{}".format(image.shape[0], image.shape[1], image.shape[2]))
-        (im_width, im_height) = image.size
-        return np.array(image.getdata()).reshape((im_height, im_width,3)).astype(np.uint8)
 
     def get_classification(self, image):
         """Determines the color of the traffic light in the image
@@ -54,7 +56,6 @@ class TLClassifier(object):
 
         # the array based representation of the image will be used later in order to prepare the
         # result image with boxes and labels on it.
-        #image_np = self.load_image_into_numpy_array(image)
         image_np = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
         image_np_expanded = np.expand_dims(image_np, axis=0)
@@ -63,7 +64,7 @@ class TLClassifier(object):
         classes_int = np.squeeze(classes).astype(np.int32)
         scores_sq = np.squeeze(scores)
         #rospy.logwarn("classify: {}, {}".format(classes_int[0], scores_sq[0]))
-        if scores_sq[0] < 0.1:
+        if scores_sq[0] < 0.5:
             return TrafficLight.UNKNOWN
         elif classes_int[0] == 1:
             return TrafficLight.GREEN

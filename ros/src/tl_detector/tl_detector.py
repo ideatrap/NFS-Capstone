@@ -13,7 +13,7 @@ import yaml
 import math
 
 STATE_COUNT_THRESHOLD = 3
-DIST_FROM_SIG_THRESH = 100
+DIST_FROM_SIG_THRESH = 200
 
 class TLDetector(object):
     def __init__(self):

@@ -222,13 +222,13 @@ class TLDetector(object):
         dist_2_signal = light_wp - car_position
         if dist_2_signal < 0:
             dist_2_signal = self.num_waypoints - 1 - car_position + light_wp
-        rospy.logwarn("Dist: {}".format(dist_2_signal))
+        rospy.logwarn("Number of waypoints to the next traffic lights: {}".format(dist_2_signal))
 
         if light == 1:
             state_classified = self.get_light_state(light)
             state = state_classified
             #return light_wp, state
-            rospy.logwarn("Signal GT, Signal Classified: {},{}".format(state_gt, state_classified))
+            #rospy.logwarn("Signal GT, Signal Classified: {},{}".format(state_gt, state_classified))
         else:
             state = state_gt
         #self.waypoints = None

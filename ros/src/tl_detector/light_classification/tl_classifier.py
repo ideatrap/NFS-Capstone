@@ -62,7 +62,7 @@ class TLClassifier(object):
         (boxes, scores, classes, num) = self.sess.run([detection_boxes, detection_scores, detection_classes, num_detections],feed_dict={image_tensor: image_np_expanded})
         classes_int = np.squeeze(classes).astype(np.int32)
         scores_sq = np.squeeze(scores)
-        rospy.logwarn("classify: {}, {}".format(classes_int[0], scores_sq[0]))
+        #rospy.logwarn("classify: {}, {}".format(classes_int[0], scores_sq[0]))
         if scores_sq[0] < 0.1:
             return TrafficLight.UNKNOWN
         elif classes_int[0] == 1:

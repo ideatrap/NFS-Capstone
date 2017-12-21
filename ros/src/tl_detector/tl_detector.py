@@ -29,7 +29,8 @@ class TLDetector(object):
         self.got_light_array = 0
         self.got_waypoints = 0
         self.use_classifier = 1
-
+        self.car_position = None
+        self.light_classifier = None
 
         sub1 = rospy.Subscriber('/current_pose', PoseStamped, self.pose_cb)
         sub2 = rospy.Subscriber('/base_waypoints', Lane, self.waypoints_cb)
@@ -184,9 +185,9 @@ class TLDetector(object):
 
         # List of positions that correspond to the line to stop in front of for a given intersection
         stop_line_positions = self.config['stop_line_positions']
-        car_position = None
+        self.car_position = None
         if(self.pose):
-            car_position = self.get_closest_waypoint(self.pose)
+            self.car_position = self.get_closest_waypoint(self.pose)
 
         #TODO find the closest visible traffic light (if one exists)
 
@@ -205,23 +206,23 @@ class TLDetector(object):
         min_dist=self.num_waypoints
         #Find the closest stop line ahead of the car
         for i in range(0,len(self.light_wp_array)):
-            dist = self.light_wp_array[i] - car_position
+            dist = self.light_wp_array[i] - self.car_position
             if dist < 0:
-                dist = self.num_waypoints - 1 - car_position + self.light_wp_array[i]
+                dist = self.num_waypoints - 1 - self.car_position + self.light_wp_array[i]
             if dist < min_dist:
                 min_dist = dist
                 close_id = i
 
-        #rospy.logwarn("Car pos (i,X,Y): {},{},{}".format(car_position,self.waypoints[car_position].pose.pose.position.x, self.waypoints[car_position].pose.pose.position.y))
+        #rospy.logwarn("Car pos (i,X,Y): {},{},{}".format(self.car_position,self.waypoints[self.car_position].pose.pose.position.x, self.waypoints[self.car_position].pose.pose.position.y))
         #rospy.logwarn("Closest light (i,X,Y): {},{},{}".format(close_id, self.light_xy_array[close_id].pose.position.x, self.light_xy_array[close_id].pose.position.y))
         #rospy.logwarn("Signal: {}".format(self.lights[close_id].state))
 
         #Use the ground truth just for debugging
         state_gt = self.lights[close_id].state
         light_wp = self.light_wp_array[close_id]
-        dist_2_signal = light_wp - car_position
+        dist_2_signal = light_wp - self.car_position
         if dist_2_signal < 0:
-            dist_2_signal = self.num_waypoints - 1 - car_position + light_wp
+            dist_2_signal = self.num_waypoints - 1 - self.car_position + light_wp
         rospy.logwarn("Number of waypoints to the next traffic lights: {}".format(dist_2_signal))
 
         if light == 1:

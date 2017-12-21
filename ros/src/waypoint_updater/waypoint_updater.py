@@ -129,7 +129,7 @@ class WaypointUpdater(object):
             index_stop_line = self.red_light_index - 10
             num_wp_stopping = index_stop_line - self.next_waypoint_index #number of ways points used to stop the car
             #linearly decelerate the car
-            des = self.current_velocity / num_wp_stopping
+            des = self.current_velocity / (num_wp_stopping +0.001)
 
 
         if self.next_waypoint_index is not None:

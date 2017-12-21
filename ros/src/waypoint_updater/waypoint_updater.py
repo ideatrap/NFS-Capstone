@@ -24,7 +24,12 @@ as well as to verify your TL classifier.
 
 LOOKAHEAD_WPS = 100 # Number of waypoints to look ahead of the car
 
-DIST_LIGHT_LINE = 4 #distance from the stop line to the traffic light
+DIST_LIGHT_LINE = 3.5 #distance from the stop line to the traffic light
+
+#for max speed of 40 KM/H, with max acceleration of 10M/S2, braking distance is 6.4M, and time of 1.0842 Second
+BRAKE_DIS = 8 #Distance to apply for brake
+
+
 
 '''
 GREEN = 1
@@ -97,8 +102,8 @@ class WaypointUpdater(object):
         #TODO will it detect yellow light?
 
         rospy.logwarn("Index: waypoint, redlight {}, {}".format(self.next_waypoint_index,self.red_light_index))
-        if self.red_light_index > self.next_waypoint_index:
-            #distance to the next traffic light
+        if self.red_light_index and self.next_waypoint_index and self.red_light_index > self.next_waypoint_index:
+            #distance to the next traffic light in meters
             distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
             distance_tl = distance_tl - DIST_LIGHT_LINE #minus the distance from stop line to the traffic light
             rospy.logwarn("Car is {:.2f} meters from the red light".format(distance_tl))
@@ -109,23 +114,24 @@ class WaypointUpdater(object):
             self.current_velocity_mph = 2.23694 * self.current_velocity # miles per hour
             #rospy.logwarn("Current speed is {:.2f} MPH".format(self.current_velocity_mph))
 
-        #Stop the car if it cannot pass the line within 2 seconds
-        if distance_tl and self.current_velocity > 0 and distance_tl / self.current_velocity > 3:
-            rospy.logwarn("Time to pass the traffic light: {}".format(distance_tl / self.current_velocity))
+        #Stop the car if it cannot pass the line within 1.5 seconds. safe to brake
+        if distance_tl and self.current_velocity > 0 and distance_tl / self.current_velocity > 1.5 and distance_tl < BRAKE_DIS:
+            rospy.logwarn("Time to pass the stop line: {}".format(distance_tl / self.current_velocity))
             set_speed = 0
-        else: #if it's green light ahead
-            set_speed = self.max_velocity_mph
+        else: #if it's green light ahead, or safe to pass through the light
+            set_speed = self.max_velocity*0.2778*0.95 #target speed in meter per second
 
-        rospy.logwarn("Target speed is {}".format(set_speed))
+        rospy.logwarn("Target speed is {:.2f} MPH".format(set_speed*2.23694))
 
         if self.next_waypoint_index is not None:
             wp_index = self.next_waypoint_index
             for i in range(LOOKAHEAD_WPS):
-                start_wp = self.base_waypoints[wp_index]
+                base_wp = self.base_waypoints[wp_index]
                 next_wp = Waypoint()
-                next_wp.pose = start_wp.pose #position
-                next_wp.twist = start_wp.twist #Speed
-                next_wp.twist.twist.linear.x = set_speed
+                next_wp.pose = base_wp.pose #position
+                next_wp.twist = base_wp.twist #Speed
+                next_wp.twist.twist.linear.x = set_speed#convert miles per hour to meters per second
+
 
                 wps_pub.waypoints.append(next_wp)
                 wp_index = (wp_index+1) % self.num_waypoints
@@ -155,12 +161,12 @@ class WaypointUpdater(object):
             if dist < min_dist:
                 wp_ahead_index = i
                 min_dist = dist
-         #rospy.logwarn("distance is {}".format(min_dist))
+         #rospy.logwarn("distance to nearest way point is {}".format(min_dist))
 
 
          #ensure the way points is ahead of the car
-        if min_dist < 0:
-            wp_ahead_index = wp_ahead_index + 1
+         #if min_dist < 0:
+         #   wp_ahead_index = wp_ahead_index + 1
 
         self.next_waypoint_index = wp_ahead_index % self.num_waypoints
 

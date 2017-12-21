@@ -141,7 +141,7 @@ class WaypointUpdater(object):
                 next_wp.twist = base_wp.twist #Speed
                 #if the car shall brake, and setting reduced speed for all points leading to the stop line.
                 if state == 'brake' and i <= num_wp_stopping:
-                    if i = num_wp_stopping:
+                    if i == num_wp_stopping:
                         next_wp.twist.twist.linear.x = 0 # the way point that the car shall stop
                     else:
                         next_wp.twist.twist.linear.x = (self.current_velocity - des * (i+1))

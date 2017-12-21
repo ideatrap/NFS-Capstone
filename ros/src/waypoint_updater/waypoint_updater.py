@@ -128,6 +128,9 @@ class WaypointUpdater(object):
         if state == 'brake':
             index_stop_line = self.red_light_index - 10
             num_wp_stopping = index_stop_line - self.next_waypoint_index #number of ways points used to stop the car
+            #linearly decelerate the car
+            des = self.current_velocity / num_wp_stopping
+
 
         if self.next_waypoint_index is not None:
             wp_index = self.next_waypoint_index
@@ -136,7 +139,14 @@ class WaypointUpdater(object):
                 next_wp = Waypoint()
                 next_wp.pose = base_wp.pose #position
                 next_wp.twist = base_wp.twist #Speed
-                next_wp.twist.twist.linear.x = max_speed#convert miles per hour to meters per second
+                #if the car shall brake, and setting reduced speed for all points leading to the stop line.
+                if state == 'brake' and i <= num_wp_stopping:
+                    if i = num_wp_stopping:
+                        next_wp.twist.twist.linear.x = 0 # the way point that the car shall stop
+                    else:
+                        next_wp.twist.twist.linear.x = (self.current_velocity - des * (i+1))
+                else:
+                    next_wp.twist.twist.linear.x = max_speed#convert miles per hour to meters per second
                 wps_pub.waypoints.append(next_wp)
                 wp_index = (wp_index+1) % self.num_waypoints
 

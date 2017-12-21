@@ -29,6 +29,7 @@ DIST_LIGHT_LINE = 4 #distance from the stop line to the traffic light
 #for max speed of 40 KM/H, with max acceleration of 10M/S2, braking distance is 6.4M, and time of 1.0842 Second
 BRAKE_DIS = 8 #Distance to apply for brake
 
+WP_GAP_LINE_LIGHT = 11 #number of way points between stop line and traffic light
 
 
 '''
@@ -126,7 +127,7 @@ class WaypointUpdater(object):
         rospy.logwarn("Cat state is set to be {}".format(state))
 
         if state == 'brake':
-            index_stop_line = self.red_light_index - 10
+            index_stop_line = self.red_light_index - WP_GAP_LINE_LIGHT
             num_wp_stopping = index_stop_line - self.next_waypoint_index #number of ways points used to stop the car
             #linearly decelerate the car
             des = self.current_velocity / (num_wp_stopping +0.001)

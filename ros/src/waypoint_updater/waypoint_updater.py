@@ -119,7 +119,7 @@ class WaypointUpdater(object):
             rospy.logwarn("Time to pass the stop line: {}".format(distance_tl / self.current_velocity))
             set_speed = 0
         else: #if it's green light ahead, or safe to pass through the light
-            set_speed = self.max_velocity*0.2778*0.95 #target speed in meter per second
+            set_speed = self.max_velocity_km*0.2778*0.95 #target speed in meter per second
 
         rospy.logwarn("Target speed is {:.2f} MPH".format(set_speed*2.23694))
 

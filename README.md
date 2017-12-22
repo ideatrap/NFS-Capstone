@@ -11,12 +11,12 @@ The is the team repo for the Udacity Capstone project. It's comprised of the fol
 To build the environment needed to run the code in this repo, you can find the installation and system requirements in [Original Udacity project instructions](https://github.com/udacity/CarND-Capstone).
 
 # Building and running the project
-You can find the light classification [model](https://drive.google.com/open?id=1zgwV5fsgDHjXK9b8VZwyg0DkvvAWgFZ1) in this link.
+Please find the models for classification models [here](https://drive.google.com/open?id=1_Tth59EMFbogki_6tEUdMxMvloUF__Vz) in this link.
 
 To use it in the simulator you must:
-* Download and extract model.tar.gz
-* You should find frozen_inference_graph.pb after extaction
-* Copy ```frozen_inference_graph.pb into ros/src/tl_detector/light_classification/sim_model``` into your local repo
+* Download and extract model.tar.gz (this is one of the models trained for the simulator or real world)
+* You should find ```frozen_inference_graph_real.pb``` and ```frozen_inference_graph_sim.pb``` after extaction
+* Copy one of the frozen models into ```ros/src/tl_detector/light_classification/sim_model``` into your local repo
 
 Once set up you need to go to the folder labeled ```NFS-Capstone/ros``` and type in the following and build commands:
 * ```catkin_make```

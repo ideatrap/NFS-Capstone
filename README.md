@@ -17,7 +17,7 @@ The models used in this exercise are based on the **Faster rcnn resnet 101 archi
 To use one of the models in the simulator you must:
 * Download and extract model.tar.gz (this tar file contains two models; one trained for the simulator and the other for the real world)
 * The respective files are labelled```frozen_inference_graph_real.pb``` and ```frozen_inference_graph_sim.pb```
-* Copy one of the frozen models into ```ros/src/tl_detector/light_classification/sim_model``` into your local repo
+* Copy one of the frozen models into ```ros/src/tl_detector/light_classification/model``` into your local repo
 
 Once set up you need to go to the folder labeled ```NFS-Capstone/ros``` and type in the following and build commands:
 * ```catkin_make```

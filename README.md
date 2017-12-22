@@ -3,7 +3,7 @@ This is the capstone project repo for the Udacity Self-Driving Car Nanodegree: P
 
 Need for Speed is comprised of the following engineers:
 
-* Kiarie Ndegwa (kiarie.ndegwa@gmail.com) 
+* Kiarie Ndegwa (u4742829@anu.edu.au) 
 * Joseph Zhou (zhouqi.joseph@gmail.com)
 * Pramod BM (pmb@nvidia.com)
 * Sidharth Varier (sidvarier@gmail.com)

@@ -11,8 +11,8 @@ The is the team repo for the Udacity Capstone project. It's comprised of the fol
 To build the environment needed to run the code in this repo, you can find the installation and system requirements in [Original Udacity project instructions](https://github.com/udacity/CarND-Capstone).
 
 # Building and running the project
-Please find the models for classification models [here](https://drive.google.com/open?id=1_Tth59EMFbogki_6tEUdMxMvloUF__Vz).
-The models used in this exercise are based on the **Faster rcnn resnet 101 architecture**; pretrained on the Coco dataset and fine-tuned on the Bosch traffic signal dataset. 
+Please find the models for traffic light classification [here](https://drive.google.com/open?id=1_Tth59EMFbogki_6tEUdMxMvloUF__Vz).
+The models used in this exercise are based on the **Faster rcnn resnet 101 architecture**; pretrained on the Coco dataset and fine-tuned on the **Bosch traffic signal dataset**. 
 
 To use one of the models in the simulator you must:
 * Download and extract model.tar.gz (this tar file contains two models; one trained for the simulator and the other for the real world)

@@ -24,12 +24,12 @@ as well as to verify your TL classifier.
 
 LOOKAHEAD_WPS = 100 # Number of waypoints to look ahead of the car
 
-DIST_LIGHT_LINE = 4 #distance from the stop line to the traffic light
+DIST_LIGHT_LINE = 5 #distance from the stop line to the traffic light
 
 #for max speed of 40 KM/H, with max acceleration of 10M/S2, braking distance is 6.4M, and time of 1.0842 Second
-BRAKE_DIS = 8 #Distance to apply for brake
+BRAKE_DIS = 10 #Distance to apply for brake
 
-WP_GAP_LINE_LIGHT = 11 #number of way points between stop line and traffic light
+WP_GAP_LINE_LIGHT = 12 #number of way points between stop line and traffic light
 
 
 '''
@@ -128,7 +128,7 @@ class WaypointUpdater(object):
 
         if state == 'brake':
             index_stop_line = self.red_light_index - WP_GAP_LINE_LIGHT
-            num_wp_stopping = index_stop_line - self.next_waypoint_index #number of ways points used to stop the car
+            num_wp_stopping = max(index_stop_line - self.next_waypoint_index,1) #number of ways points used to stop the car
             #linearly decelerate the car
             des = self.current_velocity / (num_wp_stopping +0.001)
 
@@ -148,6 +148,8 @@ class WaypointUpdater(object):
                         next_wp.twist.twist.linear.x = (self.current_velocity - des * (i+1))
                 else:
                     next_wp.twist.twist.linear.x = max_speed#convert miles per hour to meters per second
+                    if state == 'brake':
+                        next_wp.twist.twist.linear.x = 0 #setting the rest speed to be 0
                 wps_pub.waypoints.append(next_wp)
                 wp_index = (wp_index+1) % self.num_waypoints
 

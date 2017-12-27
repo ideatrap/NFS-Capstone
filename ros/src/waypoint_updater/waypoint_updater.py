@@ -103,9 +103,9 @@ class WaypointUpdater(object):
         #check red light distance
         #TODO will it detect yellow light?
 
-        rospy.logwarn("Index: waypoint, redlight {}, {}".format(self.next_waypoint_index,self.red_light_index))
+        rospy.logwarn("Index of waypoint,redlight:   {}, {}".format(self.next_waypoint_index,self.red_light_index))
         if self.next_waypoint_index:
-            rospy.logwarn("Current way point target speed in meter / second: {:.2f}".format(self.base_waypoints[self.next_waypoint_index].twist.twist.linear.x))
+            rospy.logwarn("Next way point target speed:  {:.2f}".format(self.base_waypoints[self.next_waypoint_index].twist.twist.linear.x))
 
         if self.red_light_index and self.next_waypoint_index and self.red_light_index > self.next_waypoint_index:
             #distance to the next traffic light in meters
@@ -122,7 +122,7 @@ class WaypointUpdater(object):
         #Stop the car if it cannot pass the line within 1.5 seconds. safe to brake
         #Condition to break
         if distance_tl and distance_tl < BRAKE_DIS:
-            rospy.logwarn("Car is too close to stop line. Break")
+            #rospy.logwarn("Car is too close to stop line. Break")
             state = "brake"
         else: #if it's green light ahead, or safe to pass through the light
             state = "run"

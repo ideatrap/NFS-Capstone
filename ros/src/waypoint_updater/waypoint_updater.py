@@ -104,7 +104,8 @@ class WaypointUpdater(object):
         #TODO will it detect yellow light?
 
         rospy.logwarn("Index: waypoint, redlight {}, {}".format(self.next_waypoint_index,self.red_light_index))
-        rospy.logwarn("Current way point target speed in meter / second: {:.2f}".format(self.next_waypoint_index.twist.twist.linear.x))
+        if self.next_waypoint_index:
+            rospy.logwarn("Current way point target speed in meter / second: {:.2f}".format(self.next_waypoint_index.twist.twist.linear.x))
 
         if self.red_light_index and self.next_waypoint_index and self.red_light_index > self.next_waypoint_index:
             #distance to the next traffic light in meters

@@ -117,6 +117,7 @@ class WaypointUpdater(object):
             #rospy.logwarn("Current speed is {:.2f} MPH".format(self.current_velocity_mph))
 
         #Stop the car if it cannot pass the line within 1.5 seconds. safe to brake
+        #Condition to break
         if distance_tl and distance_tl < BRAKE_DIS:
             rospy.logwarn("Car is too close to stop line. Break")
             state = "brake"

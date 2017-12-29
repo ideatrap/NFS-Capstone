@@ -121,7 +121,7 @@ class WaypointUpdater(object):
 
         #Stop the car if it cannot pass the line within 1.5 seconds. safe to brake
         #Condition to break
-        if distance_tl and distance_tl < BRAKE_DIS and self.next_waypoint_index and self.red_light_index and self.next_waypoint_index < self.red_light_index:
+        if distance_tl and distance_tl < BRAKE_DIS:
             #rospy.logwarn("Car is too close to stop line. Break")
             state = "brake"
         else: #if it's green light ahead, or safe to pass through the light

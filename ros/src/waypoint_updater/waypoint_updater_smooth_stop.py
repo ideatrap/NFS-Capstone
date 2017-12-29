@@ -27,9 +27,9 @@ LOOKAHEAD_WPS = 100 # Number of waypoints to look ahead of the car
 DIST_LIGHT_LINE = 4.7 #distance from the stop line to the traffic light
 
 #for max speed of 40 KM/H, with max acceleration of 10M/S2, braking distance is 6.4M, and time of 1.0842 Second
-BRAKE_DIS = 12.5 #Distance to apply for brake
+BRAKE_DIS = 36 #Distance to apply for brake
 
-WP_GAP_LINE_LIGHT = 10 #number of way points between stop line and traffic light
+WP_GAP_LINE_LIGHT = 12 #number of way points between stop line and traffic light
 
 
 '''
@@ -103,14 +103,13 @@ class WaypointUpdater(object):
         #check red light distance
         #TODO will it detect yellow light?
 
-        rospy.logwarn("Index of waypoint,redlight:   {}, {}".format(self.next_waypoint_index,self.red_light_index))
+        rospy.logwarn("Index: waypoint, redlight {}, {}".format(self.next_waypoint_index,self.red_light_index))
         if self.next_waypoint_index:
             rospy.logwarn("Next way point target speed:  {:.2f}".format(self.base_waypoints[self.next_waypoint_index].twist.twist.linear.x))
-
         if self.red_light_index and self.next_waypoint_index and self.red_light_index > self.next_waypoint_index:
             #distance to the next traffic light in meters
-            distance_tl_raw = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
-            distance_tl = distance_tl_raw - DIST_LIGHT_LINE #minus the distance from stop line to the traffic light
+            distance_tl = self.distance(self.base_waypoints, self.next_waypoint_index, self.red_light_index)
+            distance_tl = distance_tl - DIST_LIGHT_LINE #minus the distance from stop line to the traffic light
             rospy.logwarn("Car is {:.2f} meters from the stopping light".format(distance_tl))
 
         #check car's current speed
@@ -122,7 +121,7 @@ class WaypointUpdater(object):
         #Stop the car if it cannot pass the line within 1.5 seconds. safe to brake
         #Condition to break
         if distance_tl and distance_tl < BRAKE_DIS:
-            #rospy.logwarn("Car is too close to stop line. Break")
+            rospy.logwarn("Car is too close to traffic light. Break!")
             state = "brake"
         else: #if it's green light ahead, or safe to pass through the light
             state = "run"
@@ -132,9 +131,9 @@ class WaypointUpdater(object):
 
         if state == 'brake':
             index_stop_line = self.red_light_index - WP_GAP_LINE_LIGHT
-            num_wp_stopping = max(index_stop_line - self.next_waypoint_index,0) #number of ways points used to stop the car
+            num_wp_stopping = max(index_stop_line - self.next_waypoint_index,0) #number of way points used to stop the car
             #linearly decelerate the car
-            des = self.current_velocity / (num_wp_stopping +0.001)
+            des = self.current_velocity / (num_wp_stopping +0.0001)
 
 
         if self.next_waypoint_index is not None:
@@ -147,9 +146,14 @@ class WaypointUpdater(object):
                 #if the car shall brake, and setting reduced speed for all points leading to the stop line.
                 if state == 'brake': #and i <= num_wp_stopping:
                     next_wp.twist.twist.linear.x = 0
+                    
+                    if i < num_wp_stopping:
+                        next_wp.twist.twist.linear.x = max((self.current_velocity - des * (i+1)*1.2),0)
+                    else:
+                        next_wp.twist.twist.linear.x = 0 #setting speed for the rest points to be 0
                 else:
                     next_wp.twist.twist.linear.x = max_speed#convert miles per hour to meters per second
-                    
+   
                 wps_pub.waypoints.append(next_wp)
                 wp_index = (wp_index+1) % self.num_waypoints
 

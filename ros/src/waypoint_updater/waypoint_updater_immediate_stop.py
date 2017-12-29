@@ -130,13 +130,6 @@ class WaypointUpdater(object):
         max_speed = self.max_velocity_km*0.2778*0.9 #max speed in meter per second
         rospy.logwarn("Cat state is set to be:      {}".format(state))
 
-        if state == 'brake':
-            index_stop_line = self.red_light_index - WP_GAP_LINE_LIGHT
-            num_wp_stopping = max(index_stop_line - self.next_waypoint_index,0) #number of ways points used to stop the car
-            #linearly decelerate the car
-            des = self.current_velocity / (num_wp_stopping +0.001)
-
-
         if self.next_waypoint_index is not None:
             wp_index = self.next_waypoint_index
             for i in range(LOOKAHEAD_WPS):
@@ -147,19 +140,10 @@ class WaypointUpdater(object):
                 #if the car shall brake, and setting reduced speed for all points leading to the stop line.
                 if state == 'brake': #and i <= num_wp_stopping:
                     next_wp.twist.twist.linear.x = 0
-                    '''
-                    if i == num_wp_stopping:
-                        next_wp.twist.twist.linear.x = 0 # the way point that the car shall stop
-                    else:
-                        next_wp.twist.twist.linear.x = max((self.current_velocity - des * (i+1)*1.1),0)
-                    '''
+
                 else:
                     next_wp.twist.twist.linear.x = max_speed#convert miles per hour to meters per second
-                    
-                    '''
-                    if state == 'brake':
-                        next_wp.twist.twist.linear.x = 0 #setting the rest speed to be 0
-                    '''
+
                 wps_pub.waypoints.append(next_wp)
                 wp_index = (wp_index+1) % self.num_waypoints
 

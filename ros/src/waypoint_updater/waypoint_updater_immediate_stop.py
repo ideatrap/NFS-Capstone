@@ -127,7 +127,7 @@ class WaypointUpdater(object):
         else: #if it's green light ahead, or safe to pass through the light
             state = "run"
 
-        max_speed = self.max_velocity_km*0.2778*0.9 #max speed in meter per second
+        max_speed = self.max_velocity_km*0.2778*0.85 #max speed in meter per second
         rospy.logwarn("Cat state is set to be:      {}".format(state))
 
         if self.next_waypoint_index is not None:

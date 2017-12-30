@@ -139,7 +139,7 @@ class WaypointUpdater(object):
             #linearly decelerate the car
             des = self.current_velocity / (num_wp_stopping +0.0001)
         
-        if state == 'brake' and self.previous_state = 'run':
+        if state == 'brake' and self.previous_state == 'run':
             self.brake_index = self.next_waypoint_index - 1
 
 

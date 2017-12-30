@@ -5,7 +5,7 @@ This is the project repo for the final project of the Udacity Self-Driving Car N
 
 * Kiarie Ndegwa (u4742829@anu.edu.au)
 * Joseph Zhou (zhouqi.joseph@gmail.com)
-* Pramod BM (pmb@nvidia.com)
+* Pramod BM (pbm@nvidia.com)
 * Sidharth Varier (sidvarier@gmail.com)
 * Mike Rzucidlo (mfrstatements@yahoo.com)
 

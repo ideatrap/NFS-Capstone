@@ -27,9 +27,10 @@ LOOKAHEAD_WPS = 100 # Number of waypoints to look ahead of the car
 DIST_LIGHT_LINE = 4.7 #distance from the stop line to the traffic light
 
 #for max speed of 40 KM/H, with max acceleration of 10M/S2, braking distance is 6.4M, and time of 1.0842 Second
-BRAKE_DIS = 36 #Distance to apply for brake
+BRAKE_DIS = 48 #Distance to apply for brake
 
-WP_GAP_LINE_LIGHT = 12 #number of way points between stop line and traffic light
+WP_GAP_LINE_LIGHT = 16 #number of way points between stop line and traffic light
+
 
 
 '''
@@ -87,6 +88,9 @@ class WaypointUpdater(object):
 
         #traffic_cb
         self.red_light_index = None
+        
+        self.previous_state = 'run'
+        self.brake_index = None #the index that the car starts to brake
 
         rate = rospy.Rate(30)
         while not rospy.is_shutdown():
@@ -125,8 +129,8 @@ class WaypointUpdater(object):
             state = "brake"
         else: #if it's green light ahead, or safe to pass through the light
             state = "run"
-
-        max_speed = self.max_velocity_km*0.2778*0.9 #max speed in meter per second
+    
+        max_speed = self.max_velocity_km*0.2778*0.85 #max speed in meter per second
         rospy.logwarn("Cat state is set to be:      {}".format(state))
 
         if state == 'brake':
@@ -134,6 +138,9 @@ class WaypointUpdater(object):
             num_wp_stopping = max(index_stop_line - self.next_waypoint_index,0) #number of way points used to stop the car
             #linearly decelerate the car
             des = self.current_velocity / (num_wp_stopping +0.0001)
+        
+        if state == 'brake' and self.previous_state = 'run':
+            self.brake_index = self.next_waypoint_index - 1
 
 
         if self.next_waypoint_index is not None:
@@ -146,11 +153,13 @@ class WaypointUpdater(object):
                 #if the car shall brake, and setting reduced speed for all points leading to the stop line.
                 if state == 'brake': #and i <= num_wp_stopping:
                     next_wp.twist.twist.linear.x = 0
-                    
                     if i < num_wp_stopping:
-                        next_wp.twist.twist.linear.x = max((self.current_velocity - des * (i+1)*1.2),0)
+                        brake_speed = min(max(max_speed - (wp_index - self.brake_index)*des*1.2,0), max((self.current_velocity - des * (i+1)*1.3),0))
+                        next_wp.twist.twist.linear.x = brake_speed
                     else:
                         next_wp.twist.twist.linear.x = 0 #setting speed for the rest points to be 0
+                    
+                    
                 else:
                     next_wp.twist.twist.linear.x = max_speed#convert miles per hour to meters per second
    
@@ -158,6 +167,11 @@ class WaypointUpdater(object):
                 wp_index = (wp_index+1) % self.num_waypoints
 
 
+        if state == 'brake':
+            self.previous_state = 'brake'
+        else:
+            self.previous_state = 'run'
+            
 
         #rospy.logwarn('Next way point published:{}'.format(wps_pub))
         #rospy.logwarn('way points published:{}'.format(len(wps_pub.waypoints)))

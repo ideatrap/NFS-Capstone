@@ -27,7 +27,7 @@ LOOKAHEAD_WPS = 100 # Number of waypoints to look ahead of the car
 DIST_LIGHT_LINE = 4.7 #distance from the stop line to the traffic light
 
 #for max speed of 40 KM/H, with max acceleration of 10M/S2, braking distance is 6.4M, and time of 1.0842 Second
-BRAKE_DIS = 13.5 #Distance to apply for brake
+BRAKE_DIS = 16 #Distance to apply for brake
 
 WP_GAP_LINE_LIGHT = 10 #number of way points between stop line and traffic light
 

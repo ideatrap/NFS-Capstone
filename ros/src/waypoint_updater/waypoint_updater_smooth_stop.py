@@ -140,7 +140,7 @@ class WaypointUpdater(object):
             des = self.current_velocity / (num_wp_stopping +0.0001)
         
         if state == 'brake' and self.previous_state == 'run':
-            self.brake_index = self.next_waypoint_index - 1
+            self.brake_index = self.next_waypoint_index - 1 #position where it starts to brake
 
 
         if self.next_waypoint_index is not None:
@@ -154,7 +154,7 @@ class WaypointUpdater(object):
                 if state == 'brake': #and i <= num_wp_stopping:
                     next_wp.twist.twist.linear.x = 0
                     if i < num_wp_stopping:
-                        brake_speed = min(max(max_speed - (wp_index - self.brake_index)*des*1.2,0), max((self.current_velocity - des * (i+1)*1.3),0))
+                        brake_speed = min(max(max_speed - (wp_index - self.brake_index)*des*1.25,0), max((self.current_velocity - des * (i+1)*1.3),0))
                         next_wp.twist.twist.linear.x = brake_speed
                     else:
                         next_wp.twist.twist.linear.x = 0 #setting speed for the rest points to be 0

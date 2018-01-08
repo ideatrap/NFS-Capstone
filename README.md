@@ -15,8 +15,8 @@ To build the environment needed to run the code in this repo, you should follow 
 The models for traffic light classification are shared in the google drive. The link is given in the IMPORTANT NOTE section
 The models used in this exercise are based on the **Faster rcnn resnet 101 architecture**; pretrained on the Coco dataset and fine-tuned on the **Bosch traffic signal dataset**.
 
-## IMPORTANT NOTE: To use the models in the simulator you must:
-* Download and extract the models from the [link] (https://drive.google.com/open?id=1_Tth59EMFbogki_6tEUdMxMvloUF__Vz). (`model.tar.gz` contains two models; one trained for the simulator and the other for the real world.)
+## IMPORTANT NOTE - To use the models in the simulator you must:
+* Download and extract the models from the [link](https://drive.google.com/open?id=1_Tth59EMFbogki_6tEUdMxMvloUF__Vz). (`model.tar.gz` contains two models; one trained for the simulator and the other for the real world.)
 * The respective files are labelled```frozen_inference_graph_real.pb``` and ```frozen_inference_graph_sim.pb```
 * Copy both frozen models into ```ros/src/tl_detector/light_classification/model``` into your local repo
 
